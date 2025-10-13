@@ -1,15 +1,61 @@
 use bevy::prelude::*;
+use rand::{thread_rng, Rng};
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Utils
+////////////////////////////////////////////////////////////////////////////////////////
+
+#[derive(Component)]
+pub struct FutureTransform {
+    pub position: Vec3,
+    pub angle: Quat
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Entity variables
+////////////////////////////////////////////////////////////////////////////////////////
+
+#[derive(Component)]
+pub struct PhysicalTraits {
+    size: f32,
+    sight: f32,
+    speed: f32,
+    reach: f32
+}
+
+impl PhysicalTraits {
+    pub fn new() -> Self {
+        let mut rng = thread_rng();
+
+        let size = 1.0;
+        
+        let sight = rng.gen_range(5.0..7.0) * size;
+        let speed = rng.gen_range(2.0..5.0) * size;
+
+        let reach = rng.gen_range(0.5..2.0) * size;
+
+        Self {
+            size,
+            sight,
+            speed,
+            reach
+        }
+    } 
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // States Structs
 ////////////////////////////////////////////////////////////////////////////////////////
 
+// Action states
 #[derive(Component)]
 pub struct Idle;
 
+// Searching states
 #[derive(Component)]
-pub struct Searching;
+pub struct SearchingNew;
 
+// Moving states
 #[derive(Component)]
-pub struct Moving;
+pub struct MovingNew;
 

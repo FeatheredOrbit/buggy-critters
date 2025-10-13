@@ -3,8 +3,6 @@ use crate::entity::components::{shared_components::*, idle_components::*, render
 
 
 pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
-    
-
     let entity = commands.spawn(
         (
 
@@ -13,7 +11,7 @@ pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
             GlobalTransform::default(),
             InheritedVisibility::default(),
             
-            // Identifier
+            // Identifier for the parent
             EntityRoot,
 
             // The behaviours to choose from when idling
@@ -21,13 +19,19 @@ pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
                 IdleBehaviour{name: IdleStates::Move, weight: 3},
                 IdleBehaviour{name: IdleStates::Stay, weight: 7}
             ]),
+
+            // Physical traits
+            PhysicalTraits::new(),
             
             // Starting state
             Idle,
 
-            // Initialize variables for idle state
+            // Initialize components for idle state
             TimeToAction::new(),
-            ActionTimer::new()
+            ActionTimer::new(),
+
+            // Initialize components for searching states
+            FutureTransform{position: Vec3::default(), angle: Quat::default()}
         )
     ).id();
 

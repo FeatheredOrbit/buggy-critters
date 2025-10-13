@@ -42,7 +42,7 @@ fn find_next_state(entity: Entity, behaviours: &IdleBehaviours, commands: &mut C
 fn call_next_state(entity: Entity, state: &IdleStates, commands: &mut Commands) {
     match (state) {
         IdleStates::Move => {
-            commands.entity(entity).remove::<Idle>().insert(Moving);
+            commands.entity(entity).remove::<Idle>().insert(SearchingNew);
             println!("Diddy ahh blud");
         },
 

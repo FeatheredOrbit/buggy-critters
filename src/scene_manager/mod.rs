@@ -9,7 +9,11 @@ impl Plugin for SceneManagerPlugin {
 }
 
 fn init(mut commands: Commands) {
+    let mut camera = Camera2dBundle::default();
+
+    camera.projection.scale = 4.0;
+
     commands.spawn(
-        Camera2dBundle::default()
+        camera
     );
 }
