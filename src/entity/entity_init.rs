@@ -41,9 +41,9 @@ pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<AssetServer>) {
 
-    let default_head: Handle<Image> = asset_server.load("bugs/body_parts/heads/chunky.png");
-    let default_body: Handle<Image> = asset_server.load("bugs/body_parts/bodies/chunky.png");
-    let default_legs: Handle<Image> = asset_server.load("bugs/body_parts/legs/curved.png");
+    let default_head: Handle<Image> = asset_server.load("art/bugs/body_parts/heads/chunky.png");
+    let default_body: Handle<Image> = asset_server.load("art/bugs/body_parts/bodies/chunky.png");
+    let default_legs: Handle<Image> = asset_server.load("art/bugs/body_parts/legs/curved.png");
 
     commands.entity(*entity).with_children(|parent| {
 
