@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use crate::entity::components::{shared_components::*, idle_components::*, render_components::*};
+use crate::entity::components::{shared_components::*, idle_components::*, render_components::*, moving_components::*};
 
 
 pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
@@ -30,13 +30,16 @@ pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
             TimeToAction::new(),
             ActionTimer::new(),
 
-            // Initialize components for searching states
+            // Initialize components for moving states
+            CurrentlyRotating(false),
+            CurrentlyMoving(false),
+
+            // Initialize components for searching states and moving states
             FutureTransform{position: Vec3::default(), angle: Quat::default()}
         )
     ).id();
 
     spawn_render(&mut commands, &entity, &asset_server);
-
 }
 
 fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<AssetServer>) {

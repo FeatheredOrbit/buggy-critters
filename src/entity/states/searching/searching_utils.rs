@@ -5,7 +5,7 @@ use rand::{thread_rng, Rng};
 
 use crate::entity::components::shared_components::{FutureTransform, PhysicalTraits};
 
-pub fn search_position_random(entity: Entity, transform: &Transform, future_transform: &mut FutureTransform, traits: &PhysicalTraits) -> bool {
+pub fn search_position_random(transform: &Transform, future_transform: &mut FutureTransform, traits: &PhysicalTraits) -> bool {
 
     let current_position = Vec2::new(transform.translation.x, transform.translation.y);
     let range = traits.sight;
