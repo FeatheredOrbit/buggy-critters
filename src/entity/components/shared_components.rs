@@ -17,10 +17,10 @@ pub struct FutureTransform {
 
 #[derive(Component)]
 pub struct PhysicalTraits {
-    size: f32,
-    sight: f32,
-    speed: f32,
-    reach: f32
+    pub size: f32,
+    pub sight: f32,
+    pub speed: f32,
+    pub reach: f32
 }
 
 impl PhysicalTraits {

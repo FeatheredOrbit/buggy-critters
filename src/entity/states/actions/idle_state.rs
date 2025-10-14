@@ -43,11 +43,8 @@ fn call_next_state(entity: Entity, state: &IdleStates, commands: &mut Commands) 
     match (state) {
         IdleStates::Move => {
             commands.entity(entity).remove::<Idle>().insert(SearchingNew);
-            println!("Diddy ahh blud");
         },
 
-        IdleStates::Stay => {
-            println!("Sigma boi");
-        }
+        IdleStates::Stay => {}
     }
 }
