@@ -29,8 +29,8 @@ impl PhysicalTraits {
 
         let size = 1.0;
         
-        let sight = rng.gen_range(5.0..7.0) * size;
-        let speed = rng.gen_range(2.0..5.0) * size;
+        let sight = rng.gen_range(500.0..700.0) * size;
+        let speed = rng.gen_range(1.0..3.0) * size;
 
         let reach = rng.gen_range(0.5..2.0) * size;
 

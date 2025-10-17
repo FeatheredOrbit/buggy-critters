@@ -1,4 +1,4 @@
-use std::{f32::consts::PI, future};
+use std::f32::consts::PI;
 
 use bevy::prelude::*;
 use rand::{thread_rng, Rng};
@@ -27,7 +27,7 @@ pub fn search_position_random(transform: &Transform, future_transform: &mut Futu
     let direction = next_position - current_position;
     
     let next_angle = direction.y.atan2(direction.x);
-    let next_quat = transform.rotation * Quat::from_rotation_z(next_angle);
+    let next_quat = Quat::from_rotation_z(next_angle);
 
     future_transform.position = Vec3 { x: (next_position.x), y: (next_position.y), z: (0.0) };
     future_transform.angle = next_quat;
