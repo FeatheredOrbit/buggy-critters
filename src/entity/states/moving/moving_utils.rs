@@ -4,11 +4,11 @@ use crate::entity::components::shared_components::*;
 
 const ROTATION_MULTIPLIER: f32 = 2.5;
 
-pub fn rotate_towards_position(transform: &mut Transform, future_transform: &FutureTransform, physical_traits: &PhysicalTraits, time: &Time) -> bool {
+pub fn rotate_towards_position_smooth(transform: &mut Transform, future_transform: &FutureTransform, physical_traits: &PhysicalTraits, time: &Time) -> bool {
 
     let current_rotation = transform.rotation;
 
-    let rotation_step = physical_traits.speed * time.delta_seconds() / ROTATION_MULTIPLIER;
+    let rotation_step = physical_traits.speed * time.delta_secs() / ROTATION_MULTIPLIER;
 
     transform.rotation = current_rotation.slerp(future_transform.angle, rotation_step);
 
@@ -24,13 +24,13 @@ pub fn rotate_towards_position(transform: &mut Transform, future_transform: &Fut
     return false;
 }
 
-pub fn move_towards_position(transform: &mut Transform, future_transform: &FutureTransform, physical_traits: &PhysicalTraits, time: &Time) -> bool {
+pub fn move_towards_position_smooth(transform: &mut Transform, future_transform: &FutureTransform, physical_traits: &PhysicalTraits, time: &Time) -> bool {
     
     let current_position = transform.translation;
 
     println!("{}", current_position);
 
-    let step = physical_traits.speed * time.delta_seconds();
+    let step = physical_traits.speed * time.delta_secs();
 
     transform.translation = current_position.lerp(future_transform.position, step);
 

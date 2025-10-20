@@ -5,5 +5,5 @@
     "workbench.iconTheme": "material-icon-theme",
 
     "explorer.compactFolders": false,
-    "explorer.openEditors.visible": 0
+    "explorer.openEditors.visible": 1,
 }

@@ -6,7 +6,7 @@ use crate::entity::components::{shared_components::*, idle_components::*};
 pub fn idle_state(mut query: Query<(Entity, &IdleBehaviours, &mut TimeToAction, &ActionTimer), With<Idle>>, mut commands: Commands, time: Res<Time>) {
     for (entity, behaviours, mut time_to_action, action_timer) in &mut query {
 
-        time_to_action.0 -= time.delta_seconds();
+        time_to_action.0 -= time.delta_secs();
 
         if (time_to_action.0 <= 0.0) {
             find_next_state(entity, behaviours, &mut commands);

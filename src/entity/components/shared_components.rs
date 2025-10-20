@@ -14,6 +14,14 @@ pub struct FutureTransform {
 ////////////////////////////////////////////////////////////////////////////////////////
 // Entity variables
 ////////////////////////////////////////////////////////////////////////////////////////
+pub enum MovementPatterns {
+    Smooth,
+    Continuous,
+    ZigZag
+}
+
+#[derive(Component)]
+pub struct MovementPattern(pub MovementPatterns);
 
 #[derive(Component)]
 pub struct PhysicalTraits {

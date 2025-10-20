@@ -1,8 +1,13 @@
-use bevy::prelude::*;
-use crate::entity::components::{shared_components::*, idle_components::*, render_components::*, moving_components::*, debug_components::*};
+use bevy::{prelude::*};
+use crate::entity::{
+    components::{shared_components::*, idle_components::*, render_components::*, moving_components::*, debug_components::*},
+    
+};
+
+use crate::materials::entity_materials::*;
 
 
-pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, mut materials: ResMut<Assets<FuzzMaterial>>, mut meshes: ResMut<Assets<Mesh>>) {
     let entity = commands.spawn(
         (
 
@@ -35,6 +40,7 @@ pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
             CurrentlyMoving(false),
 
             // Initialize components for searching states and moving states
+            MovementPattern(MovementPatterns::Smooth),
             FutureTransform{position: Vec3::default(), angle: Quat::default()},
 
             // Debug components
@@ -42,11 +48,10 @@ pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>) {
         )
     ).id();
 
-    spawn_render(&mut commands, &entity, &asset_server);
+    spawn_render(&mut commands, &entity, &asset_server, materials, meshes);
 }
 
-fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<AssetServer>) {
-
+fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<AssetServer>, mut materials: ResMut<Assets<FuzzMaterial>>, mut meshes: ResMut<Assets<Mesh>>) {
     let default_head: Handle<Image> = asset_server.load("art/bugs/body_parts/heads/chunky.png");
     let default_body: Handle<Image> = asset_server.load("art/bugs/body_parts/bodies/chunky.png");
     let default_legs: Handle<Image> = asset_server.load("art/bugs/body_parts/legs/curved.png");
@@ -59,11 +64,11 @@ fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<Ass
             Head,
             EntityPart,
 
-            SpriteBundle {
-                texture: default_head,
-                transform: Transform::from_xyz(0.0, 0.0, 0.0),
-                ..Default::default()
-            }
+            Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
+            MeshMaterial2d(materials.add(FuzzMaterial {
+                material_color: LinearRgba::BLUE,
+                main_tex: default_head
+            }))
 
         ));
 
@@ -73,11 +78,11 @@ fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<Ass
             Body,
             EntityPart,
 
-            SpriteBundle {
-                texture: default_body,
-                transform: Transform::from_xyz(0.0, 0.0, 0.0),
-                ..Default::default()
-            }
+            Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
+            MeshMaterial2d(materials.add(FuzzMaterial {
+                material_color: LinearRgba::BLUE,
+                main_tex: default_body
+            }))
 
         ));
 
@@ -86,12 +91,11 @@ fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<Ass
             // Identifiers
             Legs,
             EntityPart,
-
-            SpriteBundle {
-                texture: default_legs,
-                transform: Transform::from_xyz(0.0, 0.0, 0.0),
-                ..Default::default()
-            }
+            Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
+            MeshMaterial2d(materials.add(FuzzMaterial {
+                material_color: LinearRgba::BLUE,
+                main_tex: default_legs
+            }))
 
         ));
 

@@ -1,8 +1,7 @@
-pub mod entity_init;
-pub mod components;
-
 use bevy::prelude::*;
 
+mod entity_init;
+mod components;
 mod states;
 mod debug;
 
