@@ -7,7 +7,7 @@ use crate::entity::{
 use crate::materials::entity_materials::*;
 
 
-pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, mut materials: ResMut<Assets<FuzzMaterial>>, mut meshes: ResMut<Assets<Mesh>>) {
+pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, materials: ResMut<Assets<FuzzMaterial>>, meshes: ResMut<Assets<Mesh>>) {
     let entity = commands.spawn(
         (
 
@@ -56,7 +56,24 @@ fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<Ass
     let default_body: Handle<Image> = asset_server.load("art/bugs/body_parts/bodies/chunky.png");
     let default_legs: Handle<Image> = asset_server.load("art/bugs/body_parts/legs/curved.png");
 
+    let noise: Handle<Image> = asset_server.load("art/other/noise_texture.png");
+
     commands.entity(*entity).with_children(|parent| {
+
+        parent.spawn((
+
+            // Identifiers
+            Legs,
+            EntityPart,
+            Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
+            MeshMaterial2d(materials.add(FuzzMaterial {
+                material_color: LinearRgba::BLUE,
+                main_tex: default_legs,
+                noise_tex: noise.clone(),
+                time: 0.0
+            }))
+
+        ));
 
         parent.spawn((
 
@@ -67,7 +84,9 @@ fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<Ass
             Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
             MeshMaterial2d(materials.add(FuzzMaterial {
                 material_color: LinearRgba::BLUE,
-                main_tex: default_head
+                main_tex: default_head,
+                noise_tex: noise.clone(),
+                time: 0.0
             }))
 
         ));
@@ -81,20 +100,9 @@ fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<Ass
             Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
             MeshMaterial2d(materials.add(FuzzMaterial {
                 material_color: LinearRgba::BLUE,
-                main_tex: default_body
-            }))
-
-        ));
-
-        parent.spawn((
-
-            // Identifiers
-            Legs,
-            EntityPart,
-            Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
-            MeshMaterial2d(materials.add(FuzzMaterial {
-                material_color: LinearRgba::BLUE,
-                main_tex: default_legs
+                main_tex: default_body,
+                noise_tex: noise.clone(),
+                time: 0.0
             }))
 
         ));

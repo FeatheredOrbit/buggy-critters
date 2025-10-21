@@ -6,6 +6,8 @@ use crate::entity::states::moving::moving_utils::*;
 pub fn moving_new_state(mut query: Query<(Entity, &mut Transform, &FutureTransform, &mut CurrentlyRotating, &mut CurrentlyMoving, &PhysicalTraits, &MovementPattern ), (With<MovingNew>, With<EntityRoot>)>, mut commands: Commands, time: Res<Time>) {
     for (entity, mut transform, future_transform, mut currently_rotating, mut currently_moving, physical_traits, movement_pattern) in &mut query {
 
+        return;
+
         let rotate_function: fn(&mut Transform, &FutureTransform, &PhysicalTraits, &Time) -> bool;
         let move_function: fn(&mut Transform, &FutureTransform, &PhysicalTraits, &Time) -> bool;
 

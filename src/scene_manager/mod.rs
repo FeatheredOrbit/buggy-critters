@@ -16,7 +16,7 @@ fn init(mut commands: Commands) {
         Camera2d,
 
         Projection::from(OrthographicProjection {
-            scale: 4.0,
+            scale: 1.0,
 
             ..OrthographicProjection::default_2d()
         })

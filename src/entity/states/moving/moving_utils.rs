@@ -28,8 +28,6 @@ pub fn move_towards_position_smooth(transform: &mut Transform, future_transform:
     
     let current_position = transform.translation;
 
-    println!("{}", current_position);
-
     let step = physical_traits.speed * time.delta_secs();
 
     transform.translation = current_position.lerp(future_transform.position, step);

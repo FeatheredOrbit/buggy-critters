@@ -7,9 +7,16 @@ pub struct FuzzMaterial {
     #[uniform(0)]
     pub material_color: LinearRgba,
 
-    #[texture(1)]
-    #[sampler(2)]
-    pub main_tex: Handle<Image>
+    #[uniform(1)]
+    pub time: f32,
+
+    #[texture(2)]
+    #[sampler(3)]
+    pub main_tex: Handle<Image>,
+
+    #[texture(4)]
+    #[sampler(5)]
+    pub noise_tex: Handle<Image>
 }
 
 impl Material2d for FuzzMaterial {

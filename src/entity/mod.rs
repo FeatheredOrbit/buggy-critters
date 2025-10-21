@@ -2,12 +2,15 @@ use bevy::prelude::*;
 
 mod entity_init;
 mod components;
+mod render;
 mod states;
 mod debug;
 
 use states::actions::idle_state::*;
 use states::searching::searching_new_state::*;
 use states::moving::moving_new_state::*;
+
+use render::*;
 
 use debug::debug::*;
 
@@ -20,6 +23,8 @@ impl Plugin for EntityPlugin {
 
         app.add_systems(FixedUpdate, (idle_state, searching_new_state));
         app.add_systems(Update, moving_new_state);
+
+        app.add_systems(Update, update_entity_material);
 
         app.add_systems(Last, draw_sight_radius);
     }
