@@ -10,10 +10,6 @@ pub fn update_entity_material(query: Query<(&Children, &Transform, &Velocity), W
         for child in children {
             if let Ok(handle) = material_handles.get(*child) {
                 if let Some(mat) = materials.get_mut(handle) {
-
-                    let forward = transform.rotation * Vec3::X; 
-                    let dir = Vec2::new(forward.x, forward.y).normalize();
-
                     mat.velocity = velocity.0.length();
                 }
             }

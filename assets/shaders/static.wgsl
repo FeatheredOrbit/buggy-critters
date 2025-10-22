@@ -1,13 +1,12 @@
 #import bevy_sprite::mesh2d_vertex_output::VertexOutput;
 
 @group(#{MATERIAL_BIND_GROUP}) @binding(0) var<uniform> color: vec4<f32>;
-@group(#{MATERIAL_BIND_GROUP}) @binding(1) var<uniform> velocity: f32;
 
-@group(#{MATERIAL_BIND_GROUP}) @binding(2) var main_tex: texture_2d<f32>;
-@group(#{MATERIAL_BIND_GROUP}) @binding(3) var main_sampler: sampler;
+@group(#{MATERIAL_BIND_GROUP}) @binding(1) var main_tex: texture_2d<f32>;
+@group(#{MATERIAL_BIND_GROUP}) @binding(2) var main_sampler: sampler;
 
-@group(#{MATERIAL_BIND_GROUP}) @binding(4) var noise_tex: texture_2d<f32>;
-@group(#{MATERIAL_BIND_GROUP}) @binding(5) var noise_sampler: sampler;
+@group(#{MATERIAL_BIND_GROUP}) @binding(3) var noise_tex: texture_2d<f32>;
+@group(#{MATERIAL_BIND_GROUP}) @binding(4) var noise_sampler: sampler;
 
 fn mirror(uv: vec2<f32>) -> vec2<f32> {
     return abs(fract(uv) * 2 - 1);
