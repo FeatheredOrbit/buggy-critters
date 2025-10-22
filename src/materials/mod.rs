@@ -25,7 +25,7 @@ fn instance_materials(mut commands: Commands, mut materials: ResMut<Assets<FuzzM
             material_color: LinearRgba::WHITE,
             main_tex: texture.clone(),
             noise_tex: texture.clone(),
-            time: 0.0
+            velocity: 0.0
         }))
     )).id();
 

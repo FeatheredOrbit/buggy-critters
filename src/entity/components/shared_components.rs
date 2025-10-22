@@ -57,13 +57,22 @@ impl PhysicalTraits {
 
 // Action states
 #[derive(Component)]
+pub struct Action;
+
+#[derive(Component)]
 pub struct Idle;
 
 // Searching states
 #[derive(Component)]
+pub struct Searching;
+
+#[derive(Component)]
 pub struct SearchingNew;
 
 // Moving states
+#[derive(Component)]
+pub struct Moving;
+
 #[derive(Component)]
 pub struct MovingNew;
 

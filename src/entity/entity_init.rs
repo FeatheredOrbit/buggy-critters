@@ -1,6 +1,6 @@
 use bevy::{prelude::*};
 use crate::entity::{
-    components::{shared_components::*, idle_components::*, render_components::*, moving_components::*, debug_components::*},
+    components::{shared_components::*, idle_components::*, render_components::*, moving_components::*, debug_components::*, utils_components::*},
     
 };
 
@@ -8,45 +8,63 @@ use crate::materials::entity_materials::*;
 
 
 pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, materials: ResMut<Assets<FuzzMaterial>>, meshes: ResMut<Assets<Mesh>>) {
-    let entity = commands.spawn(
-        (
+    let entity = commands.spawn(())
+        
+    // Its transform component
+    .insert((
+        Transform::from_xyz(0.0, 0.0, 0.0),
+        GlobalTransform::default(),
+        InheritedVisibility::default()
+    ))
 
-            // Its transform component
-            Transform::from_xyz(0.0, 0.0, 0.0),
-            GlobalTransform::default(),
-            InheritedVisibility::default(),
-            
-            // Identifier for the parent
-            EntityRoot,
+    // Identifier for the parent
+    .insert(EntityRoot)
 
-            // The behaviours to choose from when idling
-            IdleBehaviours(vec![
-                IdleBehaviour{name: IdleStates::Move, weight: 3},
-                IdleBehaviour{name: IdleStates::Stay, weight: 7}
-            ]),
+    // The behaviours to choose from when idling
+    .insert(
+        IdleBehaviours(vec![
+            IdleBehaviour{name: IdleStates::Move, weight: 3},
+            IdleBehaviour{name: IdleStates::Stay, weight: 7}
+        ])
+    )
 
-            // Physical traits
-            PhysicalTraits::new(),
-            
-            // Starting state
-            Idle,
+    // Physical traits
+    .insert(PhysicalTraits::new())
+    
+    // Starting state
+    .insert((
+        Action,
+        Idle
+    ))
 
-            // Initialize components for idle state
-            TimeToAction::new(),
-            ActionTimer::new(),
+    // Initialize components for idle state
+    .insert((
+        TimeToAction::new(),
+        ActionTimer::new()
+    ))
 
-            // Initialize components for moving states
-            CurrentlyRotating(true),
-            CurrentlyMoving(false),
+    // Initialize components for moving states
+    .insert((
+        CurrentlyRotating(true),
+        CurrentlyMoving(false)
+    ))
 
-            // Initialize components for searching states and moving states
-            MovementPattern(MovementPatterns::Smooth),
-            FutureTransform{position: Vec3::default(), angle: Quat::default()},
+    // Initialize components for searching states and moving states
+    .insert((
+        MovementPattern(MovementPatterns::Smooth),
+        FutureTransform{position: Vec3::default(), angle: Quat::default()}
+    ))
 
-            // Debug components
-            DrawSightRadius
-        )
-    ).id();
+    // Debug components
+    .insert(DrawSightRadius)
+
+    // Utils components
+    .insert((
+        PreviousTransform(Vec2 { x: (0.0), y: (0.0) }),
+        Velocity(Vec2 { x: (0.0), y: (0.0) })
+    ))
+
+    .id();
 
     spawn_render(&mut commands, &entity, &asset_server, materials, meshes);
 }
@@ -70,7 +88,7 @@ fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<Ass
                 material_color: LinearRgba::BLUE,
                 main_tex: default_legs,
                 noise_tex: noise.clone(),
-                time: 0.0
+                velocity: 0.0
             }))
 
         ));
@@ -86,7 +104,7 @@ fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<Ass
                 material_color: LinearRgba::BLUE,
                 main_tex: default_head,
                 noise_tex: noise.clone(),
-                time: 0.0
+                velocity: 0.0
             }))
 
         ));
@@ -102,7 +120,7 @@ fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<Ass
                 material_color: LinearRgba::BLUE,
                 main_tex: default_body,
                 noise_tex: noise.clone(),
-                time: 0.0
+                velocity: 0.0
             }))
 
         ));

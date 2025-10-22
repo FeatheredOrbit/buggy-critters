@@ -8,7 +8,7 @@ pub struct FuzzMaterial {
     pub material_color: LinearRgba,
 
     #[uniform(1)]
-    pub time: f32,
+    pub velocity: f32,
 
     #[texture(2)]
     #[sampler(3)]

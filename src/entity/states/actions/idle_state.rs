@@ -3,12 +3,12 @@ use rand::{thread_rng, Rng};
 
 use crate::entity::components::{shared_components::*, idle_components::*};
 
-pub fn idle_state(mut query: Query<(Entity, &IdleBehaviours, &mut TimeToAction, &ActionTimer), With<Idle>>, mut commands: Commands, time: Res<Time>) {
+pub fn idle_state(mut query: Query<(Entity, &IdleBehaviours, &mut TimeToAction, &ActionTimer), (With<Action>, With<Idle>)>, mut commands: Commands, time: Res<Time>) {
     for (entity, behaviours, mut time_to_action, action_timer) in &mut query {
 
         time_to_action.0 -= time.delta_secs();
 
-        if (time_to_action.0 <= 0.0) {
+        if time_to_action.0 <= 0.0 {
             find_next_state(entity, behaviours, &mut commands);
             time_to_action.0 = action_timer.0;
         }
@@ -30,7 +30,7 @@ fn find_next_state(entity: Entity, behaviours: &IdleBehaviours, commands: &mut C
     for behaviour in behaviours.0.iter() {
         cumulative += behaviour.weight;
 
-        if (cumulative > chance) {
+        if cumulative > chance {
             call_next_state(entity, &behaviour.name, commands);
             break;
         }
@@ -40,9 +40,9 @@ fn find_next_state(entity: Entity, behaviours: &IdleBehaviours, commands: &mut C
 }
 
 fn call_next_state(entity: Entity, state: &IdleStates, commands: &mut Commands) {
-    match (state) {
+    match state {
         IdleStates::Move => {
-            commands.entity(entity).remove::<Idle>().insert(SearchingNew);
+            commands.entity(entity).remove::<Action>().remove::<Idle>().insert((Searching, SearchingNew));
         },
 
         IdleStates::Stay => {}
