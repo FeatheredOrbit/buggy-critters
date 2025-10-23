@@ -1,12 +1,14 @@
 use bevy::prelude::*;
 
 mod entity;
-mod scene_manager;
+mod scene;
+mod food;
 
 mod materials;
 
 use entity::EntityPlugin;
-use scene_manager::SceneManagerPlugin;
+use food::FoodPlugin;
+use scene::SceneManagerPlugin;
 use materials::MaterialLoaderPlugin;
 
 fn main() {
@@ -14,6 +16,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugins(MaterialLoaderPlugin)
         .add_plugins(SceneManagerPlugin)
+        .add_plugins(FoodPlugin)
         .add_plugins(EntityPlugin)
         .run();
 }
