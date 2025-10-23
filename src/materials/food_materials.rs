@@ -7,12 +7,18 @@ pub struct StaticMaterial {
     #[uniform(0)]
     pub material_color: LinearRgba,
 
-    #[texture(1)]
-    #[sampler(2)]
-    pub main_tex: Handle<Image>,
+    #[uniform(1)]
+    pub time: f32,
+
+    #[uniform(2)]
+    pub speed: f32,
 
     #[texture(3)]
     #[sampler(4)]
+    pub main_tex: Handle<Image>,
+
+    #[texture(5)]
+    #[sampler(6)]
     pub noise_tex: Handle<Image>
 }
 

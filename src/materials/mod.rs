@@ -33,6 +33,8 @@ fn instance_materials(mut commands: Commands, mut fuzz_mats: ResMut<Assets<FuzzM
 
         MeshMaterial2d(static_mats.add(StaticMaterial {
             material_color: LinearRgba::WHITE,
+            time: 0.0,
+            speed: 0.0,
             main_tex: texture.clone(),
             noise_tex: texture.clone(),
         }))
