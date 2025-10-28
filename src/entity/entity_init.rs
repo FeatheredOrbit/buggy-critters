@@ -20,14 +20,6 @@ pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, materials: 
     // Identifier for the parent
     .insert(EntityRoot)
 
-    // The behaviours to choose from when idling
-    .insert(
-        IdleBehaviours(vec![
-            IdleBehaviour{name: IdleStates::Move, weight: 3},
-            IdleBehaviour{name: IdleStates::Stay, weight: 7}
-        ])
-    )
-
     // Physical traits
     .insert(PhysicalTraits::new())
     
@@ -40,7 +32,13 @@ pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, materials: 
     // Initialize components for idle state
     .insert((
         TimeToAction::new(),
-        ActionTimer::new()
+        ActionTimer::new(),
+
+        IdleBehaviours(vec![
+            IdleBehaviour{name: IdleStates::Move, weight: 3},
+            IdleBehaviour{name: IdleStates::Stay, weight: 7},
+            IdleBehaviour{name: IdleStates::SearchFood, weight: 2}
+        ])
     ))
 
     // Initialize components for moving states

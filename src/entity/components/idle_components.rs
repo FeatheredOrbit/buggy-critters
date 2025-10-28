@@ -22,7 +22,8 @@ impl TimeToAction {
 
 pub enum IdleStates {
     Move,
-    Stay
+    Stay,
+    SearchFood
 }
 
 pub struct IdleBehaviour {

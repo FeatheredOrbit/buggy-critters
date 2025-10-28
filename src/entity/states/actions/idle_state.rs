@@ -45,6 +45,10 @@ fn call_next_state(entity: Entity, state: &IdleStates, commands: &mut Commands) 
             commands.entity(entity).remove::<Action>().remove::<Idle>().insert((Searching, SearchingNew));
         },
 
-        IdleStates::Stay => {}
+        IdleStates::SearchFood => {
+            commands.entity(entity).remove::<Action>().remove::<Idle>().insert((Searching, SearchingFood));
+        }
+
+        _ => {}
     }
 }

@@ -69,10 +69,17 @@ pub struct Searching;
 #[derive(Component)]
 pub struct SearchingNew;
 
+#[derive(Component)]
+pub struct SearchingFood;
+
 // Moving states
 #[derive(Component)]
 pub struct Moving;
 
 #[derive(Component)]
 pub struct MovingNew;
+
+#[derive(Component)]
+pub struct MovingFood;
+
 
