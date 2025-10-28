@@ -55,6 +55,19 @@ impl PhysicalTraits {
 // States Structs
 ////////////////////////////////////////////////////////////////////////////////////////
 
+#[derive(PartialEq, Eq)]
+pub enum States {
+    Idle,
+    SearchingNew,
+    SearchingFood,
+    MovingNew,
+    MovingFood,
+    None
+}
+
+#[derive(Component)]
+pub struct NextState(pub States);
+
 // Action states
 #[derive(Component)]
 pub struct Action;

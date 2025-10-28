@@ -23,6 +23,9 @@ pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, materials: 
     // Physical traits
     .insert(PhysicalTraits::new())
     
+    // Component for handling what state to move to
+    .insert(NextState(crate::entity::components::shared_components::States::None))
+
     // Starting state
     .insert((
         Action,
