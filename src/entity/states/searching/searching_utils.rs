@@ -37,6 +37,6 @@ pub fn search_position_random(transform: &Transform, future_transform: &mut Futu
     
 }
 
-pub fn search_position_food(transform: &Transform, future_transform: &mut FutureTransform, traits: &PhysicalTraits) {
-    
+pub fn search_position_food(transform: &Transform, future_transform: &mut FutureTransform, traits: &PhysicalTraits) -> bool {
+    return search_position_random(transform, future_transform, traits);
 }

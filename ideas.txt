@@ -1,0 +1,6 @@
+- Make the static of the fruit get stronger as it gets eaten
+- make the fruit shake more and more as it gets eaten
+
+[Reminders]
+Finish "searching_position_food" in searching_utils.rs
+Finish "moving_food_state" in moving_food_state.rs
