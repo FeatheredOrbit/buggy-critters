@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-mod fruit;
+pub mod fruit;
 
 use fruit::FruitPlugin;
 
