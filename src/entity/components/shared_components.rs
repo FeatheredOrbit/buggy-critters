@@ -66,6 +66,9 @@ pub enum States {
 }
 
 #[derive(Component)]
+pub struct CurrentState(pub States);
+
+#[derive(Component)]
 pub struct NextState(pub States);
 
 // Action states

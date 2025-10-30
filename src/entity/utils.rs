@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
 
 use crate::constants::*;
 
@@ -28,4 +29,13 @@ pub fn update_entity_grid(query: Query<(Entity, &Transform), With<EntityRoot>>, 
         grid.0.entry((cell_x, cell_y)).or_default().push(entity);
 
     }
+}
+
+pub fn select_entity
+(
+    mouse_buttons: Res<ButtonInput<MouseButton>>,
+    window: Single<&Window, With<PrimaryWindow>>
+) 
+{
+
 }

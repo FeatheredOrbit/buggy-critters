@@ -6,6 +6,7 @@ mod render;
 mod states;
 mod debug;
 mod utils;
+mod ui;
 
 use states::*;
 use entity_init::*;
@@ -15,14 +16,17 @@ use states::moving::{moving_new_state::*, moving_food_state::*};
 
 use render::*;
 
-use debug::debug::*;
+use debug::*;
 
 use utils::*;
+
+use ui::*;
 
 pub struct EntityPlugin;
 
 impl Plugin for EntityPlugin {
     fn build(&self, app: &mut App) {
+        app.add_systems(PreStartup, ui_init);
         app.add_systems(Startup, spawn);
 
         app.add_systems(PreUpdate, update_entity_grid);
