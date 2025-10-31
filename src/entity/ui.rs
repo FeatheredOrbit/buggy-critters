@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{entity::components::ui_components::{CurrentStateText, EntityPanelRoot}, resources::CurrentlySelectedEntity};
+use crate::{entity::components::{shared_components::{CurrentState, PhysicalTraits, States}, ui_components::{CurrentStateText, EntityPanelRoot}}, resources::CurrentlySelectedEntity};
 
 pub fn ui_init(mut commands: Commands, asset_server: Res<AssetServer>) {
     let font: Handle<Font> = asset_server.load("fonts/VT323.otf");
@@ -20,7 +20,7 @@ pub fn ui_init(mut commands: Commands, asset_server: Res<AssetServer>) {
             ..Default::default()
         },
 
-        Visibility::Visible,
+        Visibility::Hidden,
 
         BackgroundColor(Color::srgba(0.4, 0.4, 0.4, 0.4))
     ))
@@ -73,17 +73,39 @@ pub fn ui_init(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 }
 
-pub fn ui_dislay
+pub fn ui_display
 (
     mut panel_visibility: Single<&mut Visibility, With<EntityPanelRoot>>,
-    selected_entity: Res<CurrentlySelectedEntity>
+    mut current_state_text: Single<&mut Text, With<CurrentStateText>>,
+    selected_entity: Res<CurrentlySelectedEntity>,
+    component_query: Query<(&PhysicalTraits, &CurrentState)>
 ) 
 {
 
     if let Some(entity) = selected_entity.0 {
 
-        
+        if let Ok((_physical_traits, current_state)) = component_query.get(entity) {
+
+            let current_state_info: &str;
+
+            match current_state.0 {
+                States::Idle => { current_state_info = "Idling" },
+                States::SearchingNew => { current_state_info = "Searching for new location" },
+                States::SearchingFood => { current_state_info = "Searching for food" },
+                States::MovingNew => { current_state_info = "Moving towards a new location" },
+                States::MovingFood => { current_state_info = "Moving towards food" },
+
+                States::None => { current_state_info = "Doing fuckass nothing" }
+            }
+
+            current_state_text.as_mut().0 = current_state_info.to_string();
+
+        }
+
+        *panel_visibility.as_mut() = Visibility::Visible;
 
     }
+
+    else { *panel_visibility.as_mut() = Visibility::Hidden }
 
 }

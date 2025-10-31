@@ -4,7 +4,7 @@ use crate::{constants::{GRID_CELL_HEIGHT, GRID_CELL_WIDTH}, entity::components::
 use crate::entity::states::searching::searching_utils::*;
 
 pub fn searching_food_state(
-    mut query: Query<(&Transform, &mut FutureTransform, &PhysicalTraits, &mut NextState), With<EntityRoot>>, 
+    mut query: Query<(&Transform, &mut FutureTransform, &PhysicalTraits, &mut NextState), (With<EntityRoot>, With<SearchingFood>, With<Searching>)>, 
     fruit_query: Query<&Transform, With<Fruit>>, 
     fruit_grid: Res<FruitGrid>
 ) {

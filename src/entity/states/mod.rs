@@ -1,13 +1,13 @@
 use bevy::prelude::*;
 
-use crate::entity::components::shared_components::{NextState, States, *};
+use crate::entity::components::{render_components::EntityRoot, shared_components::{NextState, States, *}};
 
 pub mod actions;
 pub mod searching;
 pub mod moving;
 
-pub fn change_state(mut query: Query<(Entity, &mut NextState)>, mut commands: Commands) {
-    for (entity, mut next_state) in &mut query {
+pub fn change_state(mut query: Query<(Entity, &mut NextState, &mut CurrentState), With<EntityRoot>>, mut commands: Commands) {
+    for (entity, mut next_state, mut current_state) in &mut query {
 
         if next_state.0 != States::None {
 
@@ -22,17 +22,32 @@ pub fn change_state(mut query: Query<(Entity, &mut NextState)>, mut commands: Co
             .remove::<MovingFood>();
 
             match next_state.0 {
-                States::Idle => commands.entity(entity).insert((Action, Idle)),
+                States::Idle => { 
+                    commands.entity(entity).insert((Action, Idle)); 
+                    current_state.0 = States::Idle;
+                },
 
-                States::SearchingNew => commands.entity(entity).insert((Searching, SearchingNew)),
+                States::SearchingNew => { 
+                    commands.entity(entity).insert((Searching, SearchingNew)); 
+                    current_state.0 = States::SearchingNew;
+                },
 
-                States::SearchingFood => commands.entity(entity).insert((Searching, SearchingFood)),
+                States::SearchingFood => { 
+                    commands.entity(entity).insert((Searching, SearchingFood)); 
+                    current_state.0 = States::SearchingFood;
+                },
 
-                States::MovingNew => commands.entity(entity).insert((Moving, MovingNew)),
+                States::MovingNew => { 
+                    commands.entity(entity).insert((Moving, MovingNew)); 
+                    current_state.0 = States::MovingNew;
+                },
 
-                States::MovingFood => commands.entity(entity).insert((Moving, MovingFood)),
+                States::MovingFood => { 
+                    commands.entity(entity).insert((Moving, MovingFood)); 
+                    current_state.0 = States::MovingFood;
+                },
 
-                States::None => commands.entity(entity).insert(())
+                States::None => { commands.entity(entity).insert(()); }
             };
 
             next_state.0 = States::None;

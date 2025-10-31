@@ -29,7 +29,7 @@ impl Plugin for EntityPlugin {
         app.add_systems(PreStartup, ui_init);
         app.add_systems(Startup, spawn);
 
-        app.add_systems(PreUpdate, update_entity_grid);
+        app.add_systems(PreUpdate, (update_entity_grid, ui_display, select_entity));
 
         app.add_systems(FixedUpdate, (change_state, idle_state, searching_new_state, searching_food_state));
         app.add_systems(Update, (moving_new_state, moving_food_state));

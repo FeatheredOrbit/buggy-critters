@@ -55,7 +55,7 @@ impl PhysicalTraits {
 // States Structs
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum States {
     Idle,
     SearchingNew,
@@ -68,7 +68,7 @@ pub enum States {
 #[derive(Component)]
 pub struct CurrentState(pub States);
 
-#[derive(Component)]
+#[derive(Component, Debug)]
 pub struct NextState(pub States);
 
 // Action states

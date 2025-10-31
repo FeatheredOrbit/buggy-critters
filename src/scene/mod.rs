@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 mod scene_init;
+pub mod components;
 
 use scene_init::*;
 
