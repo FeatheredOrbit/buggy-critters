@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::transform::traits;
 use bevy::window::PrimaryWindow;
 
 use crate::constants::*;
@@ -37,34 +38,41 @@ pub fn select_entity
 (
     mouse_buttons: Res<ButtonInput<MouseButton>>,
     window: Single<&Window, With<PrimaryWindow>>,
-    entities: Query<(Entity, &GlobalTransform), With<EntityRoot>>,
-    camera: Single<(&Camera, &GlobalTransform), With<MainCamera>>,
+    entities: Query<(Entity, &GlobalTransform, &PhysicalTraits), With<EntityRoot>>,
+    camera: Single<(&Camera, &GlobalTransform, &Projection), With<MainCamera>>,
     mut current_entity: ResMut<CurrentlySelectedEntity>
 ) 
 {
 
-    let (camera, camera_transform) = *camera;
+    let (camera, camera_transform, projection) = *camera;
 
     let Some(cursor_position) = window.cursor_position() else { return };
 
-    for (entity, entity_transform) in &entities {
+    if mouse_buttons.just_pressed(MouseButton::Left) {
+        if let Ok(camera_to_world) = camera.viewport_to_world_2d(camera_transform, cursor_position) {
 
-        if mouse_buttons.just_pressed(MouseButton::Left) {
+            let mut projection_scale = 1.0;
+            
+            match projection {
+                Projection::Orthographic(ortho) => {
+                    projection_scale = ortho.scale;
+                },
 
-            if let Ok(screen_position) = camera.world_to_viewport(camera_transform, entity_transform.translation()) {
-
-                let distance = cursor_position.distance(screen_position);
-
-                if distance <= 10.0 {
-
-                    current_entity.0 = Some(entity);
-
-                } else { current_entity.0 = None };
-
+                _ => {}
             }
 
-        }
+            for (entity, entity_transform, traits) in &entities {
+                let distance = entity_transform.translation().xy().distance(camera_to_world);
 
+                if distance <= 20.0 * traits.size * projection_scale {
+                    current_entity.0 = Some(entity);
+                    return;
+                }
+            }
+
+            current_entity.0 = None;
+
+        }
     }
 
 }
