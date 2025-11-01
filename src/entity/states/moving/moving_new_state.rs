@@ -4,7 +4,7 @@ use crate::entity::components::{render_components::*, shared_components::{*, Nex
 use crate::entity::states::moving::moving_utils::*;
 
 pub fn moving_new_state(mut query: Query<(&mut Transform, &FutureTransform, &mut CurrentlyRotating, &mut CurrentlyMoving, &PhysicalTraits, &MovementPattern, &mut NextState), (With<Moving>, With<MovingNew>, With<EntityRoot>)>, time: Res<Time>) {
-    query.par_iter_mut().for_each(| (mut transform, future_transform, mut currently_rotating, mut currently_moving, physical_traits, movement_pattern, mut next_state) | {
+    for (mut transform, future_transform, mut currently_rotating, mut currently_moving, physical_traits, movement_pattern, mut next_state) in &mut query {
 
         let rotate_function: fn(&mut Transform, &FutureTransform, &PhysicalTraits, &Time) -> bool;
         let move_function: fn(&mut Transform, &FutureTransform, &PhysicalTraits, &Time) -> bool;
@@ -38,5 +38,5 @@ pub fn moving_new_state(mut query: Query<(&mut Transform, &FutureTransform, &mut
             next_state.0 = States::Idle;
         }
 
-    })
+    }
 }

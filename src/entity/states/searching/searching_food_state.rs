@@ -9,7 +9,7 @@ pub fn searching_food_state(
     fruit_grid: Res<FruitGrid>
 ) {
 
-    query.par_iter_mut().for_each(| (transform, mut future_transform, physical_traits, mut next_state) | {
+    for (transform, mut future_transform, physical_traits, mut next_state) in &mut query {
 
         let cell_x = (transform.translation.x / GRID_CELL_WIDTH).floor() as i32;
         let cell_y = (transform.translation.y / GRID_CELL_HEIGHT).floor() as i32;
@@ -26,5 +26,5 @@ pub fn searching_food_state(
             }
         }
 
-    })
+    }
 }

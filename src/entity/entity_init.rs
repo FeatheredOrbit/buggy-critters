@@ -8,7 +8,7 @@ use crate::materials::entity_materials::*;
 
 
 pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, mut materials: ResMut<Assets<FuzzMaterial>>, mut meshes: ResMut<Assets<Mesh>>) {
-    for _ in 0..=1 {
+    for _ in 0..=20 {
         let entity = commands.spawn(())
         
         // Its transform component

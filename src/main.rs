@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use bevy::prelude::*;
+use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 
 mod entity;
 mod scene;
@@ -19,6 +20,8 @@ use resources::{EntityGrid, FruitGrid, CurrentlySelectedEntity};
 
 fn main() {
     App::new()
+        .add_plugins(LogDiagnosticsPlugin::default())
+        .add_plugins(FrameTimeDiagnosticsPlugin::default())
         .insert_resource(EntityGrid(HashMap::new()))
         .insert_resource(FruitGrid(HashMap::new()))
         .insert_resource(CurrentlySelectedEntity(None))

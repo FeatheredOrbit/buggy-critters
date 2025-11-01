@@ -10,11 +10,11 @@ pub fn moving_food_state(
     fruit_grid: Res<FruitGrid>,
     time: Res<Time>
 ) {
-    query.par_iter_mut().for_each(| (
+    for (
             mut transform, future_transform,
             mut currently_rotating, mut currently_moving, physical_traits, 
             movement_pattern, mut next_state
-        ) | {
+        ) in &mut query {
 
         let rotate_function: fn(&mut Transform, &FutureTransform, &PhysicalTraits, &Time) -> bool;
         let move_function: fn(&mut Transform, &FutureTransform, &PhysicalTraits, &Time) -> bool;
@@ -50,7 +50,7 @@ pub fn moving_food_state(
             } else { next_state.0 = States::SearchingFood };
         }
 
-    })
+    }
 }
 
 fn is_food_nearby(
