@@ -3,7 +3,7 @@ use bevy::{
 };
 
 #[derive(Asset, TypePath, AsBindGroup, Debug, Clone)]
-pub struct FuzzMaterial {
+pub struct EntityMaterial {
     #[uniform(0)]
     pub material_color: LinearRgba,
 
@@ -19,9 +19,9 @@ pub struct FuzzMaterial {
     pub noise_tex: Handle<Image>
 }
 
-impl Material2d for FuzzMaterial {
+impl Material2d for EntityMaterial {
     fn fragment_shader() -> ShaderRef {
-        return "shaders/fuzz.wgsl".into();
+        return "shaders/entity.wgsl".into();
     }
 
     fn alpha_mode(&self) -> AlphaMode2d {

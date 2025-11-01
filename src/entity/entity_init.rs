@@ -7,7 +7,7 @@ use crate::entity::{
 use crate::materials::entity_materials::*;
 
 
-pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, mut materials: ResMut<Assets<FuzzMaterial>>, mut meshes: ResMut<Assets<Mesh>>) {
+pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, mut materials: ResMut<Assets<EntityMaterial>>, mut meshes: ResMut<Assets<Mesh>>) {
     for _ in 0..=20 {
         let entity = commands.spawn(())
         
@@ -76,7 +76,7 @@ pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, mut materia
     }
 }
 
-fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<AssetServer>, materials: &mut ResMut<Assets<FuzzMaterial>>, meshes: &mut ResMut<Assets<Mesh>>) {
+fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<AssetServer>, materials: &mut ResMut<Assets<EntityMaterial>>, meshes: &mut ResMut<Assets<Mesh>>) {
     let default_head: Handle<Image> = asset_server.load("art/bugs/body_parts/heads/chunky.png");
     let default_body: Handle<Image> = asset_server.load("art/bugs/body_parts/bodies/chunky.png");
     let default_legs: Handle<Image> = asset_server.load("art/bugs/body_parts/legs/curved.png");
@@ -91,7 +91,7 @@ fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<Ass
             Legs,
             EntityPart,
             Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
-            MeshMaterial2d(materials.add(FuzzMaterial {
+            MeshMaterial2d(materials.add(EntityMaterial {
                 material_color: LinearRgba::BLUE,
                 main_tex: default_legs,
                 noise_tex: noise.clone(),
@@ -107,7 +107,7 @@ fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<Ass
             EntityPart,
 
             Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
-            MeshMaterial2d(materials.add(FuzzMaterial {
+            MeshMaterial2d(materials.add(EntityMaterial {
                 material_color: LinearRgba::BLUE,
                 main_tex: default_head,
                 noise_tex: noise.clone(),
@@ -123,7 +123,7 @@ fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<Ass
             EntityPart,
 
             Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
-            MeshMaterial2d(materials.add(FuzzMaterial {
+            MeshMaterial2d(materials.add(EntityMaterial {
                 material_color: LinearRgba::BLUE,
                 main_tex: default_body,
                 noise_tex: noise.clone(),
