@@ -34,7 +34,7 @@ impl Plugin for EntityPlugin {
         app.add_systems(FixedUpdate, (change_state, idle_state, searching_new_state, searching_food_state));
         app.add_systems(Update, (moving_new_state, moving_food_state));
 
-        app.add_systems(Update, update_entity_material);
+        app.add_systems(Update, sigmaboi);
 
         app.add_systems(PostUpdate, update_velocity);
 

@@ -1,22 +1,48 @@
-use bevy::{prelude::*};
-use crate::entity::{
-    components::{shared_components::*, idle_components::*, render_components::*, moving_components::*, debug_components::*, utils_components::*},
-    
-};
+use bevy::{prelude::*, render::storage::ShaderStorageBuffer};
+use crate::{constants::{CHUNKY_BODY_ATLAS_INDEX, CHUNKY_HEAD_ATLAS_INDEX, CURVED_LEGS_ATLAS_INDEX}, entity::components::{debug_components::*, idle_components::*, moving_components::*, render_components::*, shared_components::*, utils_components::*}, materials::entity_utils::EntityShaderData};
 
 use crate::materials::entity_materials::*;
 
 
-pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, mut materials: ResMut<Assets<EntityMaterial>>, mut meshes: ResMut<Assets<Mesh>>) {
-    for _ in 0..=20 {
-        let entity = commands.spawn(())
+pub fn spawn
+(
+    mut commands: Commands, 
+    asset_server: Res<AssetServer>, 
+    mut storage_buffers: ResMut<Assets<ShaderStorageBuffer>>,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut mat: ResMut<Assets<SigmaBludMaterial>>
+) 
+{
+
+    let data = vec![
+        EntityShaderData::default()
+    ];
+
+    let buffer = storage_buffers.add(ShaderStorageBuffer::from(data));
+
+    let atlas: Handle<Image> = asset_server.load("art/bugs/body_parts/atlas.png");
+        
+    commands.spawn((
+        EntityRenderer,
+
+        Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
+        MeshMaterial2d(mat.add(SigmaBludMaterial {
+            entities: buffer,
+            atlas_texture: atlas
+        })),
+        Transform::from_xyz(0.0, 0.0, 0.0),
+        GlobalTransform::default()
+        
+    ));
+    for i in 0..2 {
+        commands.spawn(())
         
         // Its transform component
         .insert((
-        Transform::from_xyz(0.0, 0.0, 0.0),
-        GlobalTransform::default(),
-        InheritedVisibility::default()
-    ))
+            Transform::from_xyz(0.0, 0.0, -i as f32 * 0.01),
+            GlobalTransform::default(),
+            InheritedVisibility::default()
+        ))
 
         // Identifier for the parent
         .insert(EntityRoot)
@@ -60,6 +86,13 @@ pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, mut materia
         FutureTransform{position: Vec3::default(), angle: Quat::default()}
     ))
 
+        // Components that holds the index of the body parts on the sprite atlas
+        .insert ( BodyPartsIndexes {
+            head: CHUNKY_HEAD_ATLAS_INDEX,
+            body: CHUNKY_BODY_ATLAS_INDEX,
+            legs: CURVED_LEGS_ATLAS_INDEX
+        } )
+
         // Debug components
         .insert(DrawSightRadius)
 
@@ -67,70 +100,7 @@ pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, mut materia
         .insert((
             PreviousTransform(Vec2 { x: (0.0), y: (0.0) }),
             Velocity(Vec2 { x: (0.0), y: (0.0) })
-        ))
-
-        .id();
-
-        spawn_render(&mut commands, &entity, &asset_server, &mut materials, &mut meshes);
+        ));
 
     }
-}
-
-fn spawn_render(commands: &mut Commands, entity: &Entity, asset_server: &Res<AssetServer>, materials: &mut ResMut<Assets<EntityMaterial>>, meshes: &mut ResMut<Assets<Mesh>>) {
-    let default_head: Handle<Image> = asset_server.load("art/bugs/body_parts/heads/chunky.png");
-    let default_body: Handle<Image> = asset_server.load("art/bugs/body_parts/bodies/chunky.png");
-    let default_legs: Handle<Image> = asset_server.load("art/bugs/body_parts/legs/curved.png");
-
-    let noise: Handle<Image> = asset_server.load("art/other/noise_texture.png");
-
-    commands.entity(*entity).with_children(|parent| {
-
-        parent.spawn((
-
-            // Identifiers
-            Legs,
-            EntityPart,
-            Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
-            MeshMaterial2d(materials.add(EntityMaterial {
-                material_color: LinearRgba::BLUE,
-                main_tex: default_legs,
-                noise_tex: noise.clone(),
-                velocity: 0.0
-            }))
-
-        ));
-
-        parent.spawn((
-
-            // Identifiers
-            Head,
-            EntityPart,
-
-            Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
-            MeshMaterial2d(materials.add(EntityMaterial {
-                material_color: LinearRgba::BLUE,
-                main_tex: default_head,
-                noise_tex: noise.clone(),
-                velocity: 0.0
-            }))
-
-        ));
-
-        parent.spawn((
-
-            // Identifiers
-            Body,
-            EntityPart,
-
-            Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
-            MeshMaterial2d(materials.add(EntityMaterial {
-                material_color: LinearRgba::BLUE,
-                main_tex: default_body,
-                noise_tex: noise.clone(),
-                velocity: 0.0
-            }))
-
-        ));
-
-    });
 }

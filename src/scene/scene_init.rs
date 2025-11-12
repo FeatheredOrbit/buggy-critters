@@ -13,7 +13,7 @@ pub fn init(mut commands: Commands) {
         MainCamera,
 
         Projection::from(OrthographicProjection {
-            scale: 2.0,
+            scale: 1.0,
 
             ..OrthographicProjection::default_2d()
         })

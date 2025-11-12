@@ -4,15 +4,11 @@ use bevy::prelude::Component;
 pub struct EntityRoot;
 
 #[derive(Component)]
-pub struct EntityPart;
-
-
+pub struct EntityRenderer;
 
 #[derive(Component)]
-pub struct Head;
-
-#[derive(Component)]
-pub struct Body;
-
-#[derive(Component)]
-pub struct Legs;
+pub struct BodyPartsIndexes {
+    pub head: u32,
+    pub body: u32,
+    pub legs: u32
+}

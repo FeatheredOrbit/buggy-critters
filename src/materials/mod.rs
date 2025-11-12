@@ -2,6 +2,7 @@ use bevy::{prelude::*, sprite_render::Material2dPlugin};
 
 pub mod entity_materials;
 pub mod food_materials;
+pub mod entity_utils;
 
 use entity_materials::*;
 use food_materials::*;
@@ -11,6 +12,7 @@ pub struct MaterialLoaderPlugin;
 impl Plugin for MaterialLoaderPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(Material2dPlugin::<EntityMaterial>::default());
+        app.add_plugins(Material2dPlugin::<SigmaBludMaterial>::default());
         app.add_plugins(Material2dPlugin::<StaticMaterial>::default());
 
         app.add_systems(PreStartup, instance_materials);
