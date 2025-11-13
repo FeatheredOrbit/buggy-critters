@@ -10,22 +10,23 @@ pub fn spawn
     asset_server: Res<AssetServer>, 
     mut storage_buffers: ResMut<Assets<ShaderStorageBuffer>>,
     mut meshes: ResMut<Assets<Mesh>>,
-    mut mat: ResMut<Assets<SigmaBludMaterial>>
+    mut mat: ResMut<Assets<EntityRenderer>>
 ) 
 {
 
-    let data = vec![
-        EntityShaderData::default(),
-        EntityShaderData::default()
+    let data: Vec<EntityShaderData> = vec![
+        
     ];
 
     let buffer = storage_buffers.add(ShaderStorageBuffer::from(data));
 
     let atlas: Handle<Image> = asset_server.load("art/bugs/body_parts/atlas.png");
+    let noise: Handle<Image> = asset_server.load("art/other/noise_texture.png");
 
-    let renderer_handle = mat.add(SigmaBludMaterial {
+    let renderer_handle = mat.add(EntityRenderer {
             entities: buffer,
-            atlas_texture: atlas
+            atlas_texture: atlas,
+            noise_texture: noise
         }
     );
 
@@ -33,7 +34,7 @@ pub fn spawn
 
     let mesh_handle = meshes.add(mesh);
         
-    for i in 0..1 {
+    for i in 0..5 {
         commands.spawn(())
         
         // Its transform component

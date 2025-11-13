@@ -3,44 +3,20 @@ use bevy::{
 };
 
 #[derive(Asset, TypePath, AsBindGroup, Debug, Clone)]
-pub struct EntityMaterial {
-    #[uniform(0)]
-    pub material_color: LinearRgba,
-
-    #[uniform(1)]
-    pub velocity: f32,
-
-    #[texture(2)]
-    #[sampler(3)]
-    pub main_tex: Handle<Image>,
-
-    #[texture(4)]
-    #[sampler(5)]
-    pub noise_tex: Handle<Image>
-}
-
-impl Material2d for EntityMaterial {
-    fn fragment_shader() -> ShaderRef {
-        return "shaders/entity.wgsl".into();
-    }
-
-    fn alpha_mode(&self) -> AlphaMode2d {
-        return AlphaMode2d::Blend;
-    }
-}
-
-
-#[derive(Asset, TypePath, AsBindGroup, Debug, Clone)]
-pub struct SigmaBludMaterial {
+pub struct EntityRenderer {
     #[storage(0, read_only)]
     pub entities: Handle<ShaderStorageBuffer>,
 
     #[texture(1)]
     #[sampler(2)]
-    pub atlas_texture: Handle<Image>
+    pub atlas_texture: Handle<Image>,
+
+    #[texture(3)]
+    #[sampler(4)]
+    pub noise_texture: Handle<Image>
 }
 
-impl Material2d for SigmaBludMaterial {
+impl Material2d for EntityRenderer {
     fn fragment_shader() -> ShaderRef {
         return "shaders/trial.wgsl".into();
     }
