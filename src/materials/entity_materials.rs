@@ -18,11 +18,11 @@ pub struct EntityRenderer {
 
 impl Material2d for EntityRenderer {
     fn fragment_shader() -> ShaderRef {
-        return "shaders/trial.wgsl".into();
+        return "shaders/entity_renderer.wgsl".into();
     }
 
     fn vertex_shader() -> ShaderRef {
-        return "shaders/trial.wgsl".into();
+        return "shaders/entity_renderer.wgsl".into();
     }
 
     fn alpha_mode(&self) -> AlphaMode2d {
