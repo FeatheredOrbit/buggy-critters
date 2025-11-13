@@ -15,31 +15,30 @@ pub fn spawn
 {
 
     let data = vec![
+        EntityShaderData::default(),
         EntityShaderData::default()
     ];
 
     let buffer = storage_buffers.add(ShaderStorageBuffer::from(data));
 
     let atlas: Handle<Image> = asset_server.load("art/bugs/body_parts/atlas.png");
-        
-    commands.spawn((
-        EntityRenderer,
 
-        Mesh2d(meshes.add(Rectangle::new(120.0, 120.0))),
-        MeshMaterial2d(mat.add(SigmaBludMaterial {
+    let renderer_handle = mat.add(SigmaBludMaterial {
             entities: buffer,
             atlas_texture: atlas
-        })),
-        Transform::from_xyz(0.0, 0.0, 0.0),
-        GlobalTransform::default()
+        }
+    );
+
+    let mesh = Mesh::from(Rectangle::new(120.0, 120.0));
+
+    let mesh_handle = meshes.add(mesh);
         
-    ));
-    for i in 0..2 {
+    for i in 0..1 {
         commands.spawn(())
         
         // Its transform component
         .insert((
-            Transform::from_xyz(0.0, 0.0, -i as f32 * 0.01),
+            Transform::from_xyz(0.0, 0.0, -i as f32),
             GlobalTransform::default(),
             InheritedVisibility::default()
         ))
@@ -56,13 +55,13 @@ pub fn spawn
             CurrentState(crate::entity::components::shared_components::States::Idle)
         ))
 
-    // Starting state
+        // Starting state
         .insert((
         Action,
         Idle
     ))
 
-    // Initialize components for idle state
+        // Initialize components for idle state
         .insert((
         TimeToAction::new(),
         ActionTimer::new(),
@@ -100,6 +99,12 @@ pub fn spawn
         .insert((
             PreviousTransform(Vec2 { x: (0.0), y: (0.0) }),
             Velocity(Vec2 { x: (0.0), y: (0.0) })
+        ))
+
+        // Rendering logic
+        .insert((
+            Mesh2d(mesh_handle.clone()),
+            MeshMaterial2d(renderer_handle.clone())
         ));
 
     }

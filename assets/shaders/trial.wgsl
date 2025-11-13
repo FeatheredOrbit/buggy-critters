@@ -1,7 +1,7 @@
 #import bevy_sprite::mesh2d_functions::mesh2d_position_local_to_clip;
 
 struct Entity {
-    transform: mat4x4<f32>, 
+    transform: mat4x4<f32>,
 
     head_atlas_index: u32,
     body_atlas_index: u32,
@@ -11,7 +11,7 @@ struct Entity {
 struct VertexInput {
     @builtin(instance_index) instance_index: u32,
     @location(0) position: vec3<f32>,
-    @location(1) uv: vec2<f32>
+    @location(2) uv: vec2<f32>
 }
 
 struct VertexOutput {
@@ -58,5 +58,20 @@ fn vertex
 
 @fragment
 fn fragment(in: VertexOutput) -> @location(0) vec4<f32> {
-    return vec4<f32>(0.0, 1.0, 0.0, 1.0);
+    let atlas_width = 360.0;
+    let atlas_height = 120.0;
+
+    let sprite_size = vec2<f32>(120.0, 120.0);
+
+    let head_column = in.head_atlas_index % 3;
+    let head_row = in.head_atlas_index / 3;
+
+    let head_uv_size = sprite_size / vec2<f32>(atlas_width, atlas_height);
+    let head_uv_offset = vec2<f32>(f32(head_column), f32(head_row)) * head_uv_size;
+
+    let final_uv = head_uv_offset + in.uv * head_uv_size;
+
+    let color = textureSample(atlas, atlas_sampler, final_uv);
+
+    return color;
 }

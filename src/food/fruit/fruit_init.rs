@@ -13,7 +13,7 @@ pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, materials: 
 
     // Transform and GlobalTransform
     .insert((
-        Transform::from_xyz(0.0, 0.0, 0.0),
+        Transform::from_xyz(500.0, 500.0, 0.0),
         GlobalTransform::default()
     ))
 

@@ -3,6 +3,6 @@ pub const GRID_CELL_HEIGHT: f32 = 1000.0;
 
 pub const DEBUG: bool = false;
 
+pub const CHUNKY_HEAD_ATLAS_INDEX: u32 = 0;
 pub const CHUNKY_BODY_ATLAS_INDEX: u32 = 1;
-pub const CHUNKY_HEAD_ATLAS_INDEX: u32 = 2;
-pub const CURVED_LEGS_ATLAS_INDEX: u32 = 3;
+pub const CURVED_LEGS_ATLAS_INDEX: u32 = 2;
