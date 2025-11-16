@@ -5,7 +5,7 @@ use crate::entity::states::moving::moving_utils::*;
 
 pub fn moving_food_state(
     mut query: Query<(&mut Transform, &FutureTransform, &mut CurrentlyRotating, &mut CurrentlyMoving, &PhysicalTraits, &MovementPattern, &mut NextState),
-        (With<Moving>, With<MovingFood>, (With<EntityRoot>, Without<Fruit>))>,
+        (With<MovingFoodBundle>, (With<EntityRoot>, Without<Fruit>))>,
     fruit_query: Query<&Transform, (With<Fruit>, Without<EntityRoot>)>,
     fruit_grid: Res<FruitGrid>,
     time: Res<Time>

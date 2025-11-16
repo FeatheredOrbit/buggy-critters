@@ -1,24 +1,24 @@
 use bevy::prelude::*;
 use rand::{thread_rng, Rng};
 
-use crate::entity::components::{shared_components::{*, NextState, States}, idle_components::*};
+use crate::entity::components::{idle_components::*, render_components::EntityRoot, shared_components::{NextState, States}};
 
-pub fn idle_state(mut query: Query<(&IdleBehaviours, &mut TimeToAction, &ActionTimer, &mut NextState), (With<Action>, With<Idle>)>, time: Res<Time>) {
-    for (behaviours, mut time_to_action, action_timer, mut next_state) in &mut query {
+pub fn idle_state(mut query: Query<(&mut IdleStateBundle, &mut NextState), With<EntityRoot>>, time: Res<Time>) {
+    for (mut idle_bundle, mut next_state) in &mut query {
 
-        time_to_action.0 -= time.delta_secs();
+        idle_bundle.time_to_action -= time.delta_secs();
 
-        if time_to_action.0 <= 0.0 {
-            find_next_state(behaviours, &mut next_state);
-            time_to_action.0 = action_timer.0;
+        if idle_bundle.time_to_action <= 0.0 {
+            find_next_state(&idle_bundle.idle_behaviours, &mut next_state);
+            idle_bundle.time_to_action = idle_bundle.action_timer;
         }
     }
 }
 
-fn find_next_state(behaviours: &IdleBehaviours, next_state: &mut NextState) {
+fn find_next_state(behaviours: &Vec<IdleBehaviour>, next_state: &mut NextState) {
     let mut probability: i32 = 0;
 
-    for behaviour in behaviours.0.iter() {
+    for behaviour in behaviours.iter() {
         probability += behaviour.weight;
     }
 
@@ -27,7 +27,7 @@ fn find_next_state(behaviours: &IdleBehaviours, next_state: &mut NextState) {
     let mut rng = thread_rng();
     let chance = rng.gen_range(0..probability);
 
-    for behaviour in behaviours.0.iter() {
+    for behaviour in behaviours.iter() {
         cumulative += behaviour.weight;
 
         if cumulative > chance {

@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 mod entity_init;
-mod components;
+pub mod components;
 mod render;
 mod states;
 mod debug;

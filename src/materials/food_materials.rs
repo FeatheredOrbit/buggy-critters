@@ -31,3 +31,8 @@ impl Material2d for StaticMaterial {
         return AlphaMode2d::Blend;
     }
 }
+
+#[derive(Asset, TypePath, AsBindGroup, Debug, Clone)]
+pub struct FruitMaterial {
+    
+}

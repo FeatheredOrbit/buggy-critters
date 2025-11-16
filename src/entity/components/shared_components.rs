@@ -71,31 +71,28 @@ pub struct CurrentState(pub States);
 #[derive(Component, Debug)]
 pub struct NextState(pub States);
 
-// Action states
-#[derive(Component)]
-pub struct Action;
-
-#[derive(Component)]
-pub struct Idle;
-
 // Searching states
+
+// Common identifier
 #[derive(Component)]
 pub struct Searching;
 
 #[derive(Component)]
-pub struct SearchingNew;
+pub struct SearchingNewBundle;
 
 #[derive(Component)]
-pub struct SearchingFood;
+pub struct SearchingFoodBundle;
 
 // Moving states
+
+// Common identifier
 #[derive(Component)]
 pub struct Moving;
 
 #[derive(Component)]
-pub struct MovingNew;
+pub struct MovingNewBundle;
 
 #[derive(Component)]
-pub struct MovingFood;
+pub struct MovingFoodBundle;
 
 

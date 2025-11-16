@@ -27,6 +27,6 @@ fn fragment(mesh: VertexOutput) -> @location(0) vec4<f32> {
     let mix = base * color * noise;
 
     return vec4<f32>(
-        mix.rgb, base.a / 0.9
+        mix.rgb, base.a * 0.9
     );
 }

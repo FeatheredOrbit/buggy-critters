@@ -13,10 +13,7 @@ pub fn spawn
     mut mat: ResMut<Assets<EntityRenderer>>
 ) 
 {
-
-    let data: Vec<EntityShaderData> = vec![
-        
-    ];
+    let data: Vec<EntityShaderData> = vec![];
 
     let buffer = storage_buffers.add(ShaderStorageBuffer::from(data));
 
@@ -34,7 +31,7 @@ pub fn spawn
 
     let mesh_handle = meshes.add(mesh);
         
-    for i in 0..5 {
+    for i in 0..1000 {
         commands.spawn(())
         
         // Its transform component
@@ -56,35 +53,20 @@ pub fn spawn
             CurrentState(crate::entity::components::shared_components::States::Idle)
         ))
 
-        // Starting state
-        .insert((
-        Action,
-        Idle
-    ))
-
-        // Initialize components for idle state
-        .insert((
-        TimeToAction::new(),
-        ActionTimer::new(),
-
-        IdleBehaviours(vec![
-            IdleBehaviour{name: IdleStates::Move, weight: 3},
-            IdleBehaviour{name: IdleStates::Stay, weight: 7},
-            IdleBehaviour{name: IdleStates::SearchFood, weight: 2}
-        ])
-    ))
+        // Bundle for the idle state
+        .insert(IdleStateBundle::default())
 
         // Initialize components for moving states
         .insert((
-        CurrentlyRotating(true),
-        CurrentlyMoving(false)
-    ))
+            CurrentlyRotating(true),
+            CurrentlyMoving(false)
+        ))
 
         // Initialize components for searching states and moving states
         .insert((
-        MovementPattern(MovementPatterns::Smooth),
-        FutureTransform{position: Vec3::default(), angle: Quat::default()}
-    ))
+            MovementPattern(MovementPatterns::Smooth),
+            FutureTransform{position: Vec3::default(), angle: Quat::default()}
+        ))
 
         // Components that holds the index of the body parts on the sprite atlas
         .insert ( BodyPartsIndexes {
