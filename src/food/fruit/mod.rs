@@ -1,12 +1,12 @@
 use bevy::prelude::*;
 
 pub mod components;
-mod fruit_init;
+mod init;
 mod fruit_updates;
 mod render;
 mod utils;
 
-use fruit_init::*;
+use init::*;
 use fruit_updates::*;
 use render::*;
 use utils::*;
@@ -20,7 +20,7 @@ impl Plugin for FruitPlugin {
 
         app.add_systems(PreUpdate, update_food_grid);
 
-        app.add_systems(Update, update_entity_material);
+        app.add_systems(Update, update_render);
 
         app.add_systems(Update, handle_being_eaten);
 

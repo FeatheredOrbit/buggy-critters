@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{constants::{GRID_CELL_HEIGHT, GRID_CELL_WIDTH}, entity::components::{render_components::*, shared_components::{NextState, States, *}}, food::fruit::components::Fruit, resources::FruitGrid};
+use crate::{constants::{GRID_CELL_HEIGHT, GRID_CELL_WIDTH}, entity::components::{attribute_components::PhysicalTraits, render_components::*, shared_components::{NextState, States, *}}, food::fruit::components::Fruit, resources::FruitGrid};
 use crate::entity::states::searching::searching_utils::*;
 
 pub fn searching_food_state(

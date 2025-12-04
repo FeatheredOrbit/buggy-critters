@@ -3,6 +3,7 @@ use bevy::window::PrimaryWindow;
 
 use crate::constants::*;
 
+use crate::entity::components::attribute_components::PhysicalTraits;
 use crate::entity::components::render_components::EntityRoot;
 use crate::resources::CurrentlySelectedEntity;
 use crate::scene::components::MainCamera;

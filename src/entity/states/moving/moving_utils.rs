@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::entity::components::shared_components::*;
+use crate::entity::components::{attribute_components::PhysicalTraits, shared_components::*};
 
 const ROTATION_MULTIPLIER: f32 = 2.5;
 

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::entity::components::{render_components::*, shared_components::{*, NextState, States}, moving_components::*};
+use crate::entity::components::{render_components::*, shared_components::{*, NextState, States}, moving_components::*, attribute_components::*};
 use crate::entity::states::moving::moving_utils::*;
 
 pub fn moving_new_state(mut query: Query<(&mut Transform, &FutureTransform, &mut CurrentlyRotating, &mut CurrentlyMoving, &PhysicalTraits, &MovementPattern, &mut NextState), (With<MovingNewBundle>, With<EntityRoot>)>, time: Res<Time>) {

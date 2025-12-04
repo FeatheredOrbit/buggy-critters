@@ -4,7 +4,9 @@ use std::f32::consts::PI;
 use bevy::prelude::*;
 use rand::{thread_rng, Rng};
 
-use crate::{entity::components::shared_components::{FutureTransform, PhysicalTraits}, food::fruit::components::Fruit};
+use crate::entity::components::{attribute_components::PhysicalTraits, shared_components::FutureTransform}; 
+
+use crate::food::fruit::components::Fruit;
 
 pub fn search_position_random(transform: &Transform, future_transform: &mut FutureTransform, traits: &PhysicalTraits) -> bool {
 

@@ -1,6 +1,6 @@
 use bevy::{color::palettes::css::RED, prelude::*};
 
-use crate::{constants::DEBUG, entity::components::{debug_components::*, render_components::*, shared_components::*}};
+use crate::{constants::DEBUG, entity::components::{debug_components::*, render_components::*, attribute_components::*}};
 
 pub fn draw_sight_radius(query: Query<(&Transform, &PhysicalTraits), (With<DrawSightRadius>, With<EntityRoot>)>, mut gizmo: Gizmos) {
     if DEBUG {

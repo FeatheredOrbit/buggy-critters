@@ -28,8 +28,10 @@ pub fn update_render
         buffer.push(data);
     }
 
-    if let Some(mat_handle) = material_query.iter().next() {
-        if buffer.len() > 0 {
+    if buffer.len() > 0 {
+
+        if let Some(mat_handle) = material_query.iter().next() {
+        
             if let Some(mat) = materials.get_mut(mat_handle) {
 
                 if let Some(buffer_asset) = storage_buffers.get_mut(&mat.entities) {
@@ -38,6 +40,7 @@ pub fn update_render
 
             }
         }
+
     }
 
     

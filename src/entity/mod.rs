@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-mod entity_init;
+mod init;
 pub mod components;
 mod render;
 mod states;
@@ -9,7 +9,7 @@ mod utils;
 mod ui;
 
 use states::*;
-use entity_init::*;
+use init::*;
 use states::actions::idle_state::*;
 use states::searching::{searching_new_state::*, searching_food_state::*};
 use states::moving::{moving_new_state::*, moving_food_state::*};

@@ -13,16 +13,16 @@ var<storage, read> fruits: array<Fruit>;
 var main_tex: texture_2d<f32>;
 
 @group(#{MATERIAL_BIND_GROUP}) @binding(2)
-var main_sampler: sampler<f32>;
+var main_sampler: sampler;
 
 @group(#{MATERIAL_BIND_GROUP}) @binding(3)
 var noise_tex: texture_2d<f32>;
 
 @group(#{MATERIAL_BIND_GROUP}) @binding(4)
-var noise_sampler: sampler<f32>;
+var noise_sampler: sampler;
 
 @group(#{MATERIAL_BIND_GROUP}) @binding(5)
-var<uniform> time: f32
+var<uniform> time: f32;
 
 struct VertexInput {
     @builtin(instance_index) instance_index: u32,
@@ -35,7 +35,7 @@ struct VertexOutput {
     @location(0) color: vec4<f32>,
     @location(1) uv: vec2<f32>,
 
-    speed: f32
+    @location(2) speed: f32
 };
 
 @vertex
@@ -69,5 +69,7 @@ fn fragment(in: VertexOutput) -> @location(0) vec4<f32> {
 
     let mix = noise * base * in.color;
 
-    return vec4<f32>(mix.rgb, base.a * 0.9);
+    return vec4<f32>(
+        mix.rgb, mix.a * 0.9
+    );
 }

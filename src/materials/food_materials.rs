@@ -1,38 +1,34 @@
 use bevy::{
-    prelude::*, render::render_resource::AsBindGroup, sprite_render::{Material2d, AlphaMode2d}, shader::ShaderRef
+    prelude::*, render::{render_resource::AsBindGroup, storage::ShaderStorageBuffer}, shader::ShaderRef, sprite_render::{AlphaMode2d, Material2d}
 };
 
 #[derive(Asset, TypePath, AsBindGroup, Debug, Clone)]
-pub struct StaticMaterial {
-    #[uniform(0)]
-    pub material_color: LinearRgba,
+pub struct FruitRenderer {
+    #[storage(0, read_only)]
+    pub fruits: Handle<ShaderStorageBuffer>,
 
-    #[uniform(1)]
-    pub time: f32,
-
-    #[uniform(2)]
-    pub speed: f32,
+    #[texture(1)]
+    #[sampler(2)]
+    pub main_texture: Handle<Image>,
 
     #[texture(3)]
     #[sampler(4)]
-    pub main_tex: Handle<Image>,
+    pub noise_texture: Handle<Image>,
 
-    #[texture(5)]
-    #[sampler(6)]
-    pub noise_tex: Handle<Image>
+    #[uniform(5)]
+    pub time: f32
 }
 
-impl Material2d for StaticMaterial {
+impl Material2d for FruitRenderer {
     fn fragment_shader() -> ShaderRef {
-        return "shaders/static.wgsl".into();
+        return "shaders/fruit_renderer.wgsl".into();
+    }
+    
+    fn vertex_shader() -> ShaderRef {
+        return "shaders/fruit_renderer.wgsl".into();
     }
 
     fn alpha_mode(&self) -> AlphaMode2d {
         return AlphaMode2d::Blend;
     }
-}
-
-#[derive(Asset, TypePath, AsBindGroup, Debug, Clone)]
-pub struct FruitMaterial {
-    
 }

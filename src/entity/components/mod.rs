@@ -5,3 +5,4 @@ pub mod moving_components;
 pub mod debug_components;
 pub mod utils_components;
 pub mod ui_components;
+pub mod attribute_components;

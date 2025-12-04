@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::entity::components::{shared_components::{*, NextState, States}, render_components::*};
+use crate::entity::components::{attribute_components::PhysicalTraits, render_components::*, shared_components::{NextState, States, *}};
 use crate::entity::states::searching::searching_utils::*;
 
 pub fn searching_new_state(mut query: Query<(&Transform, &mut FutureTransform, &PhysicalTraits, &mut NextState), (With<SearchingNewBundle>, With<EntityRoot>)>) {

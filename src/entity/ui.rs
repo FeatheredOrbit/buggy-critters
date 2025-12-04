@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{entity::components::{shared_components::{CurrentState, PhysicalTraits, States}, ui_components::{CurrentStateText, EntityPanelRoot}}, resources::CurrentlySelectedEntity};
+use crate::{entity::components::{attribute_components::PhysicalTraits, shared_components::{CurrentState, States}, ui_components::{CurrentStateText, EntityPanelRoot}}, resources::CurrentlySelectedEntity};
 
 pub fn ui_init(mut commands: Commands, asset_server: Res<AssetServer>) {
     let font: Handle<Font> = asset_server.load("fonts/VT323.otf");

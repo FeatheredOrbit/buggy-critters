@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{constants::{GRID_CELL_HEIGHT, GRID_CELL_WIDTH}, entity::components::{moving_components::*, render_components::*, shared_components::{NextState, States, *}}, food::fruit::components::Fruit, resources::FruitGrid};
+use crate::{constants::{GRID_CELL_HEIGHT, GRID_CELL_WIDTH}, entity::components::{moving_components::*, render_components::*, shared_components::{NextState, States, *}, attribute_components::*}, food::fruit::components::Fruit, resources::FruitGrid};
 use crate::entity::states::moving::moving_utils::*;
 
 pub fn moving_food_state(

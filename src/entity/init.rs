@@ -1,5 +1,5 @@
 use bevy::{prelude::*, render::storage::ShaderStorageBuffer};
-use crate::{constants::{CHUNKY_BODY_ATLAS_INDEX, CHUNKY_HEAD_ATLAS_INDEX, CURVED_LEGS_ATLAS_INDEX}, entity::components::{debug_components::*, idle_components::*, moving_components::*, render_components::*, shared_components::*, utils_components::*}, materials::entity_utils::EntityShaderData};
+use crate::{constants::{AMOUNT_OF_ENTITIES, CHUNKY_BODY_ATLAS_INDEX, CHUNKY_HEAD_ATLAS_INDEX, CURVED_LEGS_ATLAS_INDEX}, entity::components::{debug_components::*, idle_components::*, moving_components::*, render_components::*, shared_components::*, utils_components::*, attribute_components::*}, materials::entity_utils::EntityShaderData};
 
 use crate::materials::entity_materials::*;
 
@@ -31,12 +31,12 @@ pub fn spawn
 
     let mesh_handle = meshes.add(mesh);
         
-    for i in 0..1000 {
+    for i in 0..AMOUNT_OF_ENTITIES {
         commands.spawn(())
         
         // Its transform component
         .insert((
-            Transform::from_xyz(0.0, 0.0, -i as f32),
+            Transform::from_xyz(0.0, 0.0, -(i as f32)),
             GlobalTransform::default(),
             InheritedVisibility::default()
         ))

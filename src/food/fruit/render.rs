@@ -1,19 +1,42 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, render::storage::ShaderStorageBuffer};
 
-use crate::{food::fruit::components::{Fruit, NutritionalValue}, materials::food_materials::StaticMaterial};
+use crate::{food::fruit::components::{Fruit, NutritionalValue}, materials::{food_materials::FruitRenderer, food_utils::FruitShaderData}};
 
-pub fn update_entity_material(query: Query<(Entity, &NutritionalValue), With<Fruit>>, material_handles: Query<&MeshMaterial2d<StaticMaterial>>, mut materials: ResMut<Assets<StaticMaterial>>, time: Res<Time>) {
-    for (entity, nutritional_value) in &query {
-        
-        if let Ok(handle) = material_handles.get(entity) {
+pub fn update_render
+(
+    query: Query<(&GlobalTransform, &NutritionalValue), With<Fruit>>,
+    material_query: Query<&MeshMaterial2d<FruitRenderer>>,
+    mut materials: ResMut<Assets<FruitRenderer>>,
+    mut storage_buffers: ResMut<Assets<ShaderStorageBuffer>>,
 
-            if let Some(mat) = materials.get_mut(handle) {
+    time: Res<Time>
+)
+{
+    let mut data_buffer: Vec<FruitShaderData> = vec![];
 
-                mat.speed =  (1.0 / nutritional_value.0) * 75.0;
+    for (transform, nutritional_value) in &query {
+        data_buffer.push(
+            FruitShaderData::create
+            (
+            transform.to_matrix().to_cols_array_2d(), 
+            (1.0 / nutritional_value.0) * 250.0
+            )
+        );
+    }
+
+    if data_buffer.len() > 0 {
+
+        if let Some(mat_handle) = material_query.iter().next() {
+            if let Some(mat) = materials.get_mut(mat_handle) {
+
                 mat.time = time.elapsed_secs();
 
-            }
+                if let Some(storage_buffer) = storage_buffers.get_mut(&mat.fruits) {
+                    storage_buffer.set_data(data_buffer);
+                }
 
+            }
         }
+
     }
 }
