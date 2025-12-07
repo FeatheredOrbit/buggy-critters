@@ -7,6 +7,7 @@ mod states;
 mod debug;
 mod utils;
 mod ui;
+mod vitals;
 
 use states::*;
 use init::*;
@@ -22,6 +23,8 @@ use utils::*;
 
 use ui::*;
 
+use crate::entity::vitals::hunger_handler;
+
 pub struct EntityPlugin;
 
 impl Plugin for EntityPlugin {
@@ -33,6 +36,8 @@ impl Plugin for EntityPlugin {
 
         app.add_systems(FixedUpdate, (change_state, idle_state, searching_new_state, searching_food_state));
         app.add_systems(Update, (moving_new_state, moving_food_state));
+
+        app.add_systems(Update, hunger_handler);
 
         app.add_systems(Update, update_render);
 

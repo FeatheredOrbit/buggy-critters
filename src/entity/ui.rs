@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{entity::components::{attribute_components::PhysicalTraits, shared_components::{CurrentState, States}, ui_components::{CurrentStateText, EntityPanelRoot}}, resources::CurrentlySelectedEntity};
+use crate::{entity::components::{attribute_components::{PhysicalTraits, Vitals}, shared_components::{CurrentState, States}, ui_components::{CurrentStateText, EntityPanelRoot, HungerText}}, resources::CurrentlySelectedEntity};
 
 pub fn ui_init(mut commands: Commands, asset_server: Res<AssetServer>) {
     let font: Handle<Font> = asset_server.load("fonts/VT323.otf");
@@ -26,11 +26,18 @@ pub fn ui_init(mut commands: Commands, asset_server: Res<AssetServer>) {
     ))
 
     .with_children(| parent | {
-
+        /////////////////////////////////////
+        // Current state UI text
+        ////////////////////////////////////
         parent.spawn((
             Node {
                 height: Val::Px(30.0),
                 width: Val::Auto,
+
+                position_type: PositionType::Absolute,
+
+                top: Val::Percent(0.0),
+                left: Val::Percent(0.0),
 
                 ..Default::default()
             },
@@ -69,6 +76,56 @@ pub fn ui_init(mut commands: Commands, asset_server: Res<AssetServer>) {
 
         });
 
+        /////////////////////////////////////
+        // Hunger UI text
+        ////////////////////////////////////
+        parent.spawn((
+            Node {
+                height: Val::Px(30.0),
+                width: Val::Auto,
+
+                position_type: PositionType::Absolute,
+
+                top: Val::Percent(10.0),
+                left: Val::Percent(0.0),
+
+                ..Default::default()
+            },
+
+            BorderRadius::all(Val::Percent(20.0)),
+            BorderColor::all(Color::srgb(1.0, 1.0, 1.0)),
+
+            BackgroundColor(Color::srgba(0.0, 0.0, 0.0, 0.5))
+        ))
+
+        .with_children(|row| {
+            row.spawn((
+                Text::new("Hunger: "),
+                TextColor::WHITE, 
+                TextLayout::new_with_justify(Justify::Left),
+                TextFont {
+                    font: font.clone(), 
+
+                    ..Default::default()
+                },
+            ));
+
+            row.spawn((
+                HungerText,
+
+                Text::new(""),
+                TextColor::WHITE, 
+                TextLayout::new_with_justify(Justify::Left),
+                TextFont {
+                    font: font.clone(), 
+
+                    ..Default::default()
+                },
+            ));
+
+            
+        });
+
     });
 
 }
@@ -76,16 +133,20 @@ pub fn ui_init(mut commands: Commands, asset_server: Res<AssetServer>) {
 pub fn ui_display
 (
     mut panel_visibility: Single<&mut Visibility, With<EntityPanelRoot>>,
-    mut current_state_text: Single<&mut Text, With<CurrentStateText>>,
+    mut text_widgets: ParamSet<(
+        Single<&mut Text, With<CurrentStateText>>,
+        Single<&mut Text, With<HungerText>>
+    )>,
     selected_entity: Res<CurrentlySelectedEntity>,
-    component_query: Query<(&PhysicalTraits, &CurrentState)>
+    component_query: Query<(&PhysicalTraits, &CurrentState, &Vitals)>
 ) 
 {
 
     if let Some(entity) = selected_entity.0 {
 
-        if let Ok((_physical_traits, current_state)) = component_query.get(entity) {
+        if let Ok((_physical_traits, current_state, vitals)) = component_query.get(entity) {
 
+            // Figuring out current state
             let current_state_info: &str;
 
             match current_state.0 {
@@ -98,7 +159,11 @@ pub fn ui_display
                 States::None => { current_state_info = "Doing fuckass nothing" }
             }
 
-            current_state_text.as_mut().0 = current_state_info.to_string();
+            // Assigning current value to its text widget
+            text_widgets.p0().as_mut().0 = current_state_info.to_string();
+
+            // Assigning current hunger value to its text widget, rounded for simplicity
+            text_widgets.p1().as_mut().0 = vitals.hunger.round().to_string();
 
         }
 

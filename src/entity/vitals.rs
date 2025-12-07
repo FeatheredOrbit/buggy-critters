@@ -1,0 +1,45 @@
+use bevy::prelude::*;
+
+use crate::entity::components::{attribute_components::{PhysicalTraits, Starving, Vitals}, render_components::EntityRoot, shared_components::{CurrentState, States}};
+
+pub fn hunger_handler
+(
+    mut query: Query<(Entity, &mut Vitals, &PhysicalTraits, &CurrentState), With<EntityRoot>>,
+    time: Res<Time>,
+    mut commands: Commands
+) 
+{
+    for (entity, mut vitals, physical_traits, current_state) in &mut query {
+
+        let mut hunger_pay: f32 = 1.5;
+
+        if matches!(current_state.0, States::MovingFood | States::MovingNew) {
+            hunger_pay *= 2.0;
+        }
+
+        vitals.hunger -= hunger_pay * physical_traits.metabolism * time.delta_secs();
+
+        if vitals.hunger <= vitals.starvation_threshold {
+            commands.entity(entity).insert(Starving);
+        } else {
+            commands.entity(entity).remove::<Starving>();
+        }
+
+        if vitals.hunger <= 0.0 {
+            vitals.hunger = 0.0;
+        }
+
+    } 
+}
+
+pub fn thirst_handler
+(
+    mut query: Query<(Entity, &mut Vitals, &PhysicalTraits, &CurrentState), With<EntityRoot>>,
+    time: Res<Time>,
+    mut commands: Commands
+)
+{
+    for (entity, mut vitals, physical_traits, current_state) in &mut query {
+        
+    } 
+}

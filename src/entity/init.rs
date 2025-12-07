@@ -32,60 +32,66 @@ pub fn spawn
     let mesh_handle = meshes.add(mesh);
         
     for i in 0..AMOUNT_OF_ENTITIES {
-        commands.spawn(())
+        let entity = commands.spawn(()).id();
         
         // Its transform component
-        .insert((
+        commands.entity(entity).insert((
             Transform::from_xyz(0.0, 0.0, -(i as f32)),
             GlobalTransform::default(),
             InheritedVisibility::default()
-        ))
+        ));
 
         // Identifier for the parent
-        .insert(EntityRoot)
+        commands.entity(entity).insert(EntityRoot);
 
-        // Physical traits
-        .insert(PhysicalTraits::new())
+        // Atrribute components
+        let physical_traits = PhysicalTraits::new();
+        let vitals = Vitals::new(&physical_traits);
+
+        commands.entity(entity).insert((
+            physical_traits,
+            vitals
+        ));
     
         // Component for handling what state to move to and the current state
-        .insert((
+        commands.entity(entity).insert((
             NextState(crate::entity::components::shared_components::States::None),
             CurrentState(crate::entity::components::shared_components::States::Idle)
-        ))
+        ));
 
         // Bundle for the idle state
-        .insert(IdleStateBundle::default())
+        commands.entity(entity).insert(IdleStateBundle::default());
 
         // Initialize components for moving states
-        .insert((
+        commands.entity(entity).insert((
             CurrentlyRotating(true),
             CurrentlyMoving(false)
-        ))
+        ));
 
         // Initialize components for searching states and moving states
-        .insert((
+        commands.entity(entity).insert((
             MovementPattern(MovementPatterns::Smooth),
             FutureTransform{position: Vec3::default(), angle: Quat::default()}
-        ))
+        ));
 
         // Components that holds the index of the body parts on the sprite atlas
-        .insert ( BodyPartsIndexes {
+        commands.entity(entity).insert (BodyPartsIndexes {
             head: CHUNKY_HEAD_ATLAS_INDEX,
             body: CHUNKY_BODY_ATLAS_INDEX,
             legs: CURVED_LEGS_ATLAS_INDEX
-        } )
+        });
 
         // Debug components
-        .insert(DrawSightRadius)
+        commands.entity(entity).insert(DrawSightRadius);
 
         // Utils components
-        .insert((
+        commands.entity(entity).insert((
             PreviousTransform(Vec2 { x: (0.0), y: (0.0) }),
             Velocity(Vec2 { x: (0.0), y: (0.0) })
-        ))
+        ));
 
         // Rendering logic
-        .insert((
+        commands.entity(entity).insert((
             Mesh2d(mesh_handle.clone()),
             MeshMaterial2d(renderer_handle.clone())
         ));
