@@ -78,3 +78,6 @@ impl Vitals {
 
 #[derive(Component)]
 pub struct Starving;
+
+#[derive(Component)]
+pub struct Dehydrated;

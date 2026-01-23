@@ -41,7 +41,7 @@ pub fn spawn
 
         // Transform and GlobalTransform
         .insert((
-            Transform::from_xyz(0.0, 0.0, -i as f32),
+            Transform::from_xyz(0.0, 0.0, -(i as f32)),
             GlobalTransform::default()
         ))
 

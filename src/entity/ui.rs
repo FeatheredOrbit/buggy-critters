@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{entity::components::{attribute_components::{PhysicalTraits, Vitals}, shared_components::{CurrentState, States}, ui_components::{CurrentStateText, EntityPanelRoot, HungerText}}, resources::CurrentlySelectedEntity};
+use crate::{entity::components::{attribute_components::{PhysicalTraits, Vitals}, shared_components::{CurrentState, States}, ui_components::{CurrentStateText, EntityPanelRoot, HungerText, ThirstText}}, resources::CurrentlySelectedEntity};
 
 pub fn ui_init(mut commands: Commands, asset_server: Res<AssetServer>) {
     let font: Handle<Font> = asset_server.load("fonts/VT323.otf");
@@ -126,6 +126,56 @@ pub fn ui_init(mut commands: Commands, asset_server: Res<AssetServer>) {
             
         });
 
+        /////////////////////////////////////
+        // Thirst UI text
+        ////////////////////////////////////
+        parent.spawn((
+            Node {
+                height: Val::Px(30.0),
+                width: Val::Auto,
+
+                position_type: PositionType::Absolute,
+
+                top: Val::Percent(20.0),
+                left: Val::Percent(0.0),
+
+                ..Default::default()
+            },
+
+            BorderRadius::all(Val::Percent(20.0)),
+            BorderColor::all(Color::srgb(1.0, 1.0, 1.0)),
+
+            BackgroundColor(Color::srgba(0.0, 0.0, 0.0, 0.5))
+        ))
+
+        .with_children(|row| {
+            row.spawn((
+                Text::new("Thirst: "),
+                TextColor::WHITE, 
+                TextLayout::new_with_justify(Justify::Left),
+                TextFont {
+                    font: font.clone(), 
+
+                    ..Default::default()
+                },
+            ));
+
+            row.spawn((
+                ThirstText,
+
+                Text::new(""),
+                TextColor::WHITE, 
+                TextLayout::new_with_justify(Justify::Left),
+                TextFont {
+                    font: font.clone(), 
+
+                    ..Default::default()
+                },
+            ));
+
+            
+        });
+
     });
 
 }
@@ -135,7 +185,8 @@ pub fn ui_display
     mut panel_visibility: Single<&mut Visibility, With<EntityPanelRoot>>,
     mut text_widgets: ParamSet<(
         Single<&mut Text, With<CurrentStateText>>,
-        Single<&mut Text, With<HungerText>>
+        Single<&mut Text, With<HungerText>>,
+        Single<&mut Text, With<ThirstText>>
     )>,
     selected_entity: Res<CurrentlySelectedEntity>,
     component_query: Query<(&PhysicalTraits, &CurrentState, &Vitals)>
@@ -164,6 +215,9 @@ pub fn ui_display
 
             // Assigning current hunger value to its text widget, rounded for simplicity
             text_widgets.p1().as_mut().0 = vitals.hunger.round().to_string();
+
+            // Assigning current thirst value to its text widget, rounded for simplicity
+            text_widgets.p2().as_mut().0 = vitals.thirst.round().to_string();
 
         }
 

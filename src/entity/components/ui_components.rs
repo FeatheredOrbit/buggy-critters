@@ -8,3 +8,6 @@ pub struct CurrentStateText;
 
 #[derive(Component)]
 pub struct HungerText;
+
+#[derive(Component)]
+pub struct ThirstText;
