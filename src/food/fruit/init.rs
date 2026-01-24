@@ -26,7 +26,7 @@ pub fn spawn
 
     let material_handle = materials.add(FruitRenderer {
         fruits: buffer,
-        main_texture: texture,
+        main_texture: texture.clone(),
         noise_texture: noise,
         time: 0.0
     });

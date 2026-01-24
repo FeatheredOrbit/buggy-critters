@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-bevy = { version = "0.17.2", features = ["dynamic_linking", "multi_threaded"] }
+bevy = { version = "0.18", features = ["dynamic_linking", "multi_threaded"] }
 bytemuck = "1.24.0"
 rand = "0.8"

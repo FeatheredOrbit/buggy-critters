@@ -39,13 +39,14 @@ pub fn ui_init(mut commands: Commands, asset_server: Res<AssetServer>) {
                 top: Val::Percent(0.0),
                 left: Val::Percent(0.0),
 
+                border_radius: BorderRadius::all(Val::Percent(20.0)),
                 ..Default::default()
             },
-
-            BorderRadius::all(Val::Percent(20.0)),
+            
             BorderColor::all(Color::srgb(1.0, 1.0, 1.0)),
 
             BackgroundColor(Color::srgba(0.0, 0.0, 0.0, 0.5))
+            
         ))
 
         .with_children(| row | {
@@ -88,11 +89,11 @@ pub fn ui_init(mut commands: Commands, asset_server: Res<AssetServer>) {
 
                 top: Val::Percent(10.0),
                 left: Val::Percent(0.0),
+                border_radius: BorderRadius::all(Val::Percent(20.0)),
 
                 ..Default::default()
             },
 
-            BorderRadius::all(Val::Percent(20.0)),
             BorderColor::all(Color::srgb(1.0, 1.0, 1.0)),
 
             BackgroundColor(Color::srgba(0.0, 0.0, 0.0, 0.5))
@@ -139,10 +140,11 @@ pub fn ui_init(mut commands: Commands, asset_server: Res<AssetServer>) {
                 top: Val::Percent(20.0),
                 left: Val::Percent(0.0),
 
+                border_radius: BorderRadius::all(Val::Percent(20.0)),
+
                 ..Default::default()
             },
 
-            BorderRadius::all(Val::Percent(20.0)),
             BorderColor::all(Color::srgb(1.0, 1.0, 1.0)),
 
             BackgroundColor(Color::srgba(0.0, 0.0, 0.0, 0.5))
