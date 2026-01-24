@@ -40,11 +40,7 @@ var noise_tex: texture_2d<f32>;
 var noise_sampler: sampler;
 
 @vertex
-fn vertex
-(
-    in: VertexInput
-) -> VertexOutput 
-{
+fn vertex(in: VertexInput) -> VertexOutput {
     var out: VertexOutput;
 
     let entity = entities[in.instance_index];

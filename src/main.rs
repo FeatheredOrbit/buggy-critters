@@ -20,8 +20,7 @@ use resources::{EntityGrid, FruitGrid, CurrentlySelectedEntity};
 
 fn main() {
     App::new()
-        .add_plugins(LogDiagnosticsPlugin::default())
-        .add_plugins(FrameTimeDiagnosticsPlugin::default())
+        
         .insert_resource(EntityGrid(HashMap::new()))
         .insert_resource(FruitGrid(HashMap::new()))
         .insert_resource(CurrentlySelectedEntity(None))

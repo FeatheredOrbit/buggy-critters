@@ -69,7 +69,6 @@ fn fragment(in: VertexOutput) -> @location(0) vec4<f32> {
 
     let mix = noise * base * in.color;
 
-    return vec4<f32>(
-        mix.rgb, mix.a * 0.9
-    );
+    // Debug: return a solid color so we can verify the material/pipeline is active
+    return vec4<f32>(1.0, 0.0, 0.0, 1.0);
 }

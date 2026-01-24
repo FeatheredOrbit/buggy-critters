@@ -37,8 +37,7 @@ pub fn spawn
         // Its transform component
         commands.entity(entity).insert((
             Transform::from_xyz(0.0, 0.0, -(i as f32)),
-            GlobalTransform::default(),
-            InheritedVisibility::default()
+            GlobalTransform::default()
         ));
 
         // Identifier for the parent

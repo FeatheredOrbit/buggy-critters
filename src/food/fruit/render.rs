@@ -18,7 +18,7 @@ pub fn update_render
         data_buffer.push(
             FruitShaderData::create
             (
-            transform.to_matrix().to_cols_array_2d(), 
+            transform.compute_transform().to_matrix().to_cols_array_2d(), 
             (1.0 / nutritional_value.0) * 250.0
             )
         );
