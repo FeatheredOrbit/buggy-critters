@@ -17,4 +17,4 @@ pub const CHUNKY_HEAD_ATLAS_INDEX: u32 = 0;
 pub const CHUNKY_BODY_ATLAS_INDEX: u32 = 1;
 pub const CURVED_LEGS_ATLAS_INDEX: u32 = 2;
 
-pub const AMOUNT_OF_ENTITIES: usize = 30;
+pub const AMOUNT_OF_ENTITIES: usize = 1;

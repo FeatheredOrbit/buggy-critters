@@ -88,6 +88,9 @@ fn fragment(in: VertexOutput) -> @location(0) vec4<f32> {
     if in.data_type == 0 {
         return entity_fragment(in);
     }
+    if in.data_type == 1 {
+        return fruit_fragment(in);
+    }
     else {
         return vec4<f32>(1.0, 0.0, 0.0, 1.0);
     }

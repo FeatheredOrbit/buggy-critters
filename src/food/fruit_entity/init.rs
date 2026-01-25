@@ -1,3 +1,4 @@
+use bevy::camera::visibility::NoFrustumCulling;
 use bevy::prelude::*;
 use bevy::render::storage::ShaderStorageBuffer;
 
@@ -38,7 +39,8 @@ pub fn spawn
         // Add the renderer and mesh
         .insert((
             Mesh2d(mesh_handle.clone()),
-            MeshMaterial2d(renderer_handle.0.clone())
+            MeshMaterial2d(renderer_handle.0.clone()),
+            NoFrustumCulling
         ));
 
     }
