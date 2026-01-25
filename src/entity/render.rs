@@ -3,14 +3,14 @@ use bevy::render::storage::ShaderStorageBuffer;
 
 use crate::entity::components::render_components::{BodyPartsIndexes, EntityRoot};
 use crate::entity::components::utils_components::Velocity;
-use crate::materials::entity_materials::*;
 use crate::materials::entity_utils::EntityShaderData;
+use crate::materials::renderer::Renderer;
 
 pub fn update_render
 (
     query: Query<(&GlobalTransform, &Velocity, &BodyPartsIndexes), With<EntityRoot>>, 
-    material_query: Query<&MeshMaterial2d<EntityRenderer>>,
-    mut materials: ResMut<Assets<EntityRenderer>>,
+    material_query: Query<&MeshMaterial2d<Renderer>>,
+    mut materials: ResMut<Assets<Renderer>>,
     mut storage_buffers: ResMut<Assets<ShaderStorageBuffer>>
 ) 
 {

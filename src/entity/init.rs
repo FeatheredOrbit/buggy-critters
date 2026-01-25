@@ -1,32 +1,13 @@
-use bevy::{prelude::*, render::storage::ShaderStorageBuffer};
-use crate::{constants::{AMOUNT_OF_ENTITIES, CHUNKY_BODY_ATLAS_INDEX, CHUNKY_HEAD_ATLAS_INDEX, CURVED_LEGS_ATLAS_INDEX}, entity::components::{debug_components::*, idle_components::*, moving_components::*, render_components::*, shared_components::*, utils_components::*, attribute_components::*}, materials::entity_utils::EntityShaderData};
-
-use crate::materials::entity_materials::*;
-
+use bevy::{camera::visibility::NoFrustumCulling, prelude::*};
+use crate::{constants::{AMOUNT_OF_ENTITIES, CHUNKY_BODY_ATLAS_INDEX, CHUNKY_HEAD_ATLAS_INDEX, CURVED_LEGS_ATLAS_INDEX}, entity::components::{attribute_components::*, debug_components::*, idle_components::*, moving_components::*, render_components::*, shared_components::*, utils_components::*}, materials::renderer::RendererHandle};
 
 pub fn spawn
 (
     mut commands: Commands, 
-    asset_server: Res<AssetServer>, 
-    mut storage_buffers: ResMut<Assets<ShaderStorageBuffer>>,
     mut meshes: ResMut<Assets<Mesh>>,
-    mut mat: ResMut<Assets<EntityRenderer>>
+    renderer_handle: Res<RendererHandle>
 ) 
 {
-    let data: Vec<EntityShaderData> = vec![];
-
-    let buffer = storage_buffers.add(ShaderStorageBuffer::from(data));
-
-    let atlas: Handle<Image> = asset_server.load("art/bugs/body_parts/atlas.png");
-    let noise: Handle<Image> = asset_server.load("art/other/noise_texture.png");
-
-    let renderer_handle = mat.add(EntityRenderer {
-            entities: buffer,
-            atlas_texture: atlas,
-            noise_texture: noise
-        }
-    );
-
     let mesh = Mesh::from(Rectangle::new(120.0, 120.0));
 
     let mesh_handle = meshes.add(mesh);
@@ -92,7 +73,8 @@ pub fn spawn
         // Rendering logic
         commands.entity(entity).insert((
             Mesh2d(mesh_handle.clone()),
-            MeshMaterial2d(renderer_handle.clone())
+            MeshMaterial2d(renderer_handle.0.clone()),
+            NoFrustumCulling
         ));
 
     }
