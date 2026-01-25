@@ -1,4 +1,4 @@
-use crate::entity::components::idle_components::{IdleBehaviour, IdleStates};
+use crate::bug_entity::components::idle_components::{IdleBehaviour, IdleStates};
 
 pub const IDLE_BEHAVIOURS: [IdleBehaviour; 3] = [
     IdleBehaviour{name: IdleStates::Move, weight: 3},

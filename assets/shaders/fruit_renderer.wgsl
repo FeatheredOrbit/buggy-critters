@@ -1,64 +1,19 @@
-#import bevy_sprite::mesh2d_functions::mesh2d_position_local_to_clip;
-
-struct Fruit {
-    transform: mat4x4<f32>,
-
-    info1: vec4<f32>
-}
-
-@group(#{MATERIAL_BIND_GROUP}) @binding(0)
-var<storage, read> fruits: array<Fruit>;
-
-@group(#{MATERIAL_BIND_GROUP}) @binding(1)
+@group(#{MATERIAL_BIND_GROUP}) @binding(5)
 var main_tex: texture_2d<f32>;
 
-@group(#{MATERIAL_BIND_GROUP}) @binding(2)
+@group(#{MATERIAL_BIND_GROUP}) @binding(6)
 var main_sampler: sampler;
 
-@group(#{MATERIAL_BIND_GROUP}) @binding(3)
+@group(#{MATERIAL_BIND_GROUP}) @binding(7)
 var noise_tex: texture_2d<f32>;
 
-@group(#{MATERIAL_BIND_GROUP}) @binding(4)
+@group(#{MATERIAL_BIND_GROUP}) @binding(8)
 var noise_sampler: sampler;
 
-@group(#{MATERIAL_BIND_GROUP}) @binding(5)
+@group(#{MATERIAL_BIND_GROUP}) @binding(9)
 var<uniform> time: f32;
 
-struct VertexInput {
-    @builtin(instance_index) instance_index: u32,
-    @location(0) position: vec3<f32>,
-    @location(2) uv: vec2<f32>
-}
-
-struct VertexOutput {
-    @builtin(position) clip_position: vec4<f32>,
-    @location(0) color: vec4<f32>,
-    @location(1) uv: vec2<f32>,
-
-    @location(2) speed: f32
-};
-
-@vertex
-fn vertex(in: VertexInput) -> VertexOutput {
-    var out: VertexOutput;
-
-    let fruit = fruits[in.instance_index];
-
-    out.speed = fruit.info1.x;
-
-    out.clip_position = mesh2d_position_local_to_clip(fruit.transform, vec4<f32>(in.position.xy, 0.0, 1.0));
-    out.color = vec4<f32>(0.0, 1.0, 0.0, 1.0);
-    out.uv = in.uv;
-
-    return out;
-}
-
-fn mirror(uv: vec2<f32>) -> vec2<f32> {
-    return abs(fract(uv) * 2 - 1);
-}
-
-@fragment
-fn fragment(in: VertexOutput) -> @location(0) vec4<f32> {
+fn fruit_fragment(in: VertexOutput) -> vec4<f32> {
     let base = textureSample(main_tex, main_sampler, in.uv);
 
     let index = floor(time * in.speed);

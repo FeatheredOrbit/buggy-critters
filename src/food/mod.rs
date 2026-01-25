@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 
-pub mod fruit;
+pub mod fruit_entity;
 
-use fruit::FruitPlugin;
+use fruit_entity::FruitPlugin;
 
 pub struct FoodPlugin;
 

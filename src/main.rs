@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use bevy::prelude::*;
 use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 
-mod entity;
+mod bug_entity;
 mod scene;
 mod food;
 mod constants;
@@ -11,7 +11,7 @@ mod constants;
 mod materials;
 mod resources;
 
-use entity::EntityPlugin;
+use bug_entity::EntityPlugin;
 use food::FoodPlugin;
 use scene::SceneManagerPlugin;
 use materials::MaterialLoaderPlugin;
