@@ -1,14 +1,14 @@
 @group(#{MATERIAL_BIND_GROUP}) @binding(1) 
-var atlas: texture_2d<f32>;
+var atlas_bugs: texture_2d<f32>;
 
 @group(#{MATERIAL_BIND_GROUP}) @binding(2)
-var atlas_sampler: sampler;
+var atlas_sampler_bugs: sampler;
 
 @group(#{MATERIAL_BIND_GROUP}) @binding(3) 
-var noise_tex: texture_2d<f32>;
+var noise_tex_bugs: texture_2d<f32>;
 
 @group(#{MATERIAL_BIND_GROUP}) @binding(4) 
-var noise_sampler: sampler;
+var noise_sampler_bugs: sampler;
 
 fn entity_fragment(in: VertexOutput) -> vec4<f32> {
     let atlas_width = 360.0;
@@ -37,9 +37,9 @@ fn entity_fragment(in: VertexOutput) -> vec4<f32> {
     let final_body_uv = body_uv_offset + in.uv * uv_size;
     let final_legs_uv = legs_uv_offset + in.uv * uv_size;
 
-    let head = textureSample(atlas, atlas_sampler, final_head_uv) * in.info2;
-    let body = textureSample(atlas, atlas_sampler, final_body_uv) * in.info2;
-    let legs = textureSample(atlas, atlas_sampler, final_legs_uv) * in.info4;
+    let head = textureSample(atlas_bugs, atlas_sampler_bugs, final_head_uv) * in.info2;
+    let body = textureSample(atlas_bugs, atlas_sampler_bugs, final_body_uv) * in.info2;
+    let legs = textureSample(atlas_bugs, atlas_sampler_bugs, final_legs_uv) * in.info4;
 
     let base = head + body + legs;
 
@@ -47,7 +47,7 @@ fn entity_fragment(in: VertexOutput) -> vec4<f32> {
 
     let mirrored_uv = mirror(noise_uv);
 
-    let noise_texture = textureSample(noise_tex, noise_sampler, mirrored_uv);
+    let noise_texture = textureSample(noise_tex_bugs, noise_sampler_bugs, mirrored_uv);
 
     let result = (base * (noise_texture * 0.2) * base.a * 3);
 

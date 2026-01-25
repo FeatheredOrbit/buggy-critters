@@ -2,12 +2,21 @@ use bevy::{
     asset::uuid_handle, prelude::*, render::{render_resource::AsBindGroup, storage::ShaderStorageBuffer}, shader::ShaderRef, sprite_render::{AlphaMode2d, Material2d, Material2dPlugin}
 };
 
+use crate::materials::renderer::render::update_renderer;
+
 pub mod shader_data;
+mod render;
 
 pub const SHADER_HANDLE: Handle<Shader> = uuid_handle!("38c96d71-9b05-467e-b646-3380f0bdf860");
 
+
+
+
 #[derive(Resource)]
 pub struct RendererHandle(pub Handle<Renderer>);
+
+
+
 
 #[derive(Asset, TypePath, AsBindGroup, Debug, Clone, Default)]
 pub struct Renderer {
@@ -50,6 +59,9 @@ impl Material2d for Renderer {
     }
 }
 
+
+
+
 pub struct RendererPlugin;
 
 impl Plugin for RendererPlugin {
@@ -58,13 +70,15 @@ impl Plugin for RendererPlugin {
 
         let misc_shader = include_str!("../../../assets/shaders/misc.wgsl");
         let entity_renderer_shader = include_str!("../../../assets/shaders/entity_renderer.wgsl");
+        let fruit_renderer = include_str!("../../../assets/shaders/fruit_renderer.wgsl");
         let main_shader = include_str!("../../../assets/shaders/main_renderer.wgsl");
-        let joined_shader = format!("{} {} {}", main_shader, entity_renderer_shader, misc_shader); 
+        let joined_shader = format!("{} {} {} {}", main_shader, entity_renderer_shader, fruit_renderer, misc_shader); 
 
         shaders.insert(SHADER_HANDLE.id(), Shader::from_wgsl(joined_shader, "Renderer Shader")).unwrap();
 
         app.add_plugins(Material2dPlugin::<Renderer>::default());
         app.add_systems(PreStartup, compile_and_init_renderer);
+        app.add_systems(Update, update_renderer);
     }
 }
 

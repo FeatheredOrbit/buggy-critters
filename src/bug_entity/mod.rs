@@ -2,7 +2,6 @@ use bevy::prelude::*;
 
 mod init;
 pub mod components;
-mod render;
 mod states;
 mod debug;
 mod utils;
@@ -15,7 +14,6 @@ use states::actions::idle_state::*;
 use states::searching::{searching_new_state::*, searching_food_state::*};
 use states::moving::{moving_new_state::*, moving_food_state::*};
 
-use render::*;
 
 use debug::*;
 
@@ -38,8 +36,6 @@ impl Plugin for EntityPlugin {
         app.add_systems(Update, (moving_new_state, moving_food_state));
 
         app.add_systems(Update, (hunger_handler, thirst_handler));
-
-        app.add_systems(Update, update_render);
 
         app.add_systems(PostUpdate, update_velocity);
 
