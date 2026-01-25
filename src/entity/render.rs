@@ -3,8 +3,8 @@ use bevy::render::storage::ShaderStorageBuffer;
 
 use crate::entity::components::render_components::{BodyPartsIndexes, EntityRoot};
 use crate::entity::components::utils_components::Velocity;
-use crate::materials::entity_utils::EntityShaderData;
 use crate::materials::renderer::Renderer;
+use crate::materials::shader_data::ShaderData;
 
 pub fn update_render
 (
@@ -14,10 +14,10 @@ pub fn update_render
     mut storage_buffers: ResMut<Assets<ShaderStorageBuffer>>
 ) 
 {
-    let mut buffer: Vec<EntityShaderData> = vec![];
+    let mut buffer: Vec<ShaderData> = vec![];
 
     for (transform, velocity, indexes) in &query {
-        let data = EntityShaderData::create( 
+        let data = ShaderData::create_for_entity( 
             transform.compute_transform().to_matrix().to_cols_array_2d(), 
             velocity.0.length(),
             indexes.head,

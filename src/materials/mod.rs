@@ -2,9 +2,9 @@ use bevy::{prelude::*, render::storage::ShaderStorageBuffer, sprite_render::Mate
 
 pub mod entity_materials;
 pub mod food_materials;
-pub mod entity_utils;
 pub mod food_utils;
 pub mod renderer;
+pub mod shader_data;
 
 use entity_materials::*;
 use food_materials::*;
@@ -17,8 +17,9 @@ impl Plugin for MaterialLoaderPlugin {
     fn build(&self, app: &mut App) {
         let mut shaders = app.world_mut().resource_mut::<Assets<Shader>>();
 
+        let misc_shader = include_str!("../../assets/shaders/misc.wgsl");
         let main_shader = include_str!("../../assets/shaders/renderer.wgsl");
-        let joined_shader = format!("{}", main_shader); 
+        let joined_shader = format!("{} {}", main_shader, misc_shader); 
 
         shaders.insert(SHADER_HANDLE.id(), Shader::from_wgsl(joined_shader, "Renderer Shader")).unwrap();
 
