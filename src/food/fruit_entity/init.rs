@@ -1,17 +1,13 @@
-use bevy::camera::visibility::NoFrustumCulling;
 use bevy::prelude::*;
-use bevy::render::storage::ShaderStorageBuffer;
 
 use crate::food::fruit_entity::components::*;
-use crate::materials::renderer::RendererHandle;
+use crate::materials::renderer::resources::RendererHandle;
 
 pub fn spawn
 (
     mut commands: Commands, 
-    asset_server: Res<AssetServer>, 
     mut meshes: ResMut<Assets<Mesh>>,
-    mut storage_buffers: ResMut<Assets<ShaderStorageBuffer>>,
-    mut renderer_handle: Res<RendererHandle>
+    renderer_handle: Res<RendererHandle>
 ) 
 {
     let mesh_handle = meshes.add(Mesh::from(Rectangle::new(120.0, 120.0)));
@@ -40,7 +36,7 @@ pub fn spawn
         .insert((
             Mesh2d(mesh_handle.clone()),
             MeshMaterial2d(renderer_handle.0.clone()),
-            NoFrustumCulling
+            Visibility::Visible
         ));
 
     }

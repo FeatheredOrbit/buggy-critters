@@ -2,20 +2,14 @@ use bevy::{
     asset::uuid_handle, prelude::*, render::{render_resource::AsBindGroup, storage::ShaderStorageBuffer}, shader::ShaderRef, sprite_render::{AlphaMode2d, Material2d, Material2dPlugin}
 };
 
-use crate::materials::renderer::render::update_renderer;
+use crate::materials::renderer::{render::{available_for_rendering, update_renderer}, resources::{EntitiesToRender, RendererHandle}};
 
 pub mod shader_data;
 mod render;
+pub mod resources;
+pub mod components;
 
 pub const SHADER_HANDLE: Handle<Shader> = uuid_handle!("38c96d71-9b05-467e-b646-3380f0bdf860");
-
-
-
-
-#[derive(Resource)]
-pub struct RendererHandle(pub Handle<Renderer>);
-
-
 
 
 #[derive(Asset, TypePath, AsBindGroup, Debug, Clone, Default)]
@@ -44,7 +38,6 @@ pub struct Renderer {
 
 
 }
-
 impl Material2d for Renderer {
     fn fragment_shader() -> ShaderRef {
         return ShaderRef::Handle(SHADER_HANDLE);
@@ -59,11 +52,7 @@ impl Material2d for Renderer {
     }
 }
 
-
-
-
 pub struct RendererPlugin;
-
 impl Plugin for RendererPlugin {
     fn build(&self, app: &mut App) {
         let mut shaders = app.world_mut().resource_mut::<Assets<Shader>>();
@@ -76,9 +65,10 @@ impl Plugin for RendererPlugin {
 
         shaders.insert(SHADER_HANDLE.id(), Shader::from_wgsl(joined_shader, "Renderer Shader")).unwrap();
 
+        app.insert_resource(EntitiesToRender::default());
         app.add_plugins(Material2dPlugin::<Renderer>::default());
         app.add_systems(PreStartup, compile_and_init_renderer);
-        app.add_systems(Update, update_renderer);
+        app.add_systems(Update, (available_for_rendering, update_renderer).chain());
     }
 }
 

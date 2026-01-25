@@ -1,5 +1,5 @@
-use bevy::{camera::visibility::NoFrustumCulling, prelude::*};
-use crate::{constants::{AMOUNT_OF_ENTITIES, CHUNKY_BODY_ATLAS_INDEX, CHUNKY_HEAD_ATLAS_INDEX, CURVED_LEGS_ATLAS_INDEX}, bug_entity::components::{attribute_components::*, debug_components::*, idle_components::*, moving_components::*, render_components::*, shared_components::*, utils_components::*}, materials::renderer::RendererHandle};
+use bevy::prelude::*;
+use crate::{bug_entity::components::{attribute_components::*, debug_components::*, idle_components::*, moving_components::*, render_components::*, shared_components::*, utils_components::*}, constants::{AMOUNT_OF_ENTITIES, CHUNKY_BODY_ATLAS_INDEX, CHUNKY_HEAD_ATLAS_INDEX, CURVED_LEGS_ATLAS_INDEX}, materials::renderer::resources::RendererHandle};
 
 pub fn spawn
 (
@@ -17,7 +17,7 @@ pub fn spawn
         
         // Its transform component
         commands.entity(entity).insert((
-            Transform::from_xyz(0.0, 0.0, -(i as f32)),
+            Transform::from_xyz(500.0, 500.0, -(i as f32)),
             GlobalTransform::default()
         ));
 
@@ -70,11 +70,11 @@ pub fn spawn
             Velocity(Vec2 { x: (0.0), y: (0.0) })
         ));
 
-        // Rendering logic
+        // Rendering components
         commands.entity(entity).insert((
             Mesh2d(mesh_handle.clone()),
             MeshMaterial2d(renderer_handle.0.clone()),
-            NoFrustumCulling
+            Visibility::Visible
         ));
 
     }

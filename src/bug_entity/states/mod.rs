@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::bug_entity::components::{idle_components::IdleStateBundle, render_components::BugEntityRoot, shared_components::{NextState, States, *}};
+use crate::{bug_entity::components::{idle_components::IdleStateBundle, render_components::BugEntityRoot, shared_components::{NextState, States, *}}, materials::renderer::components::RenderChanged};
 
 pub mod actions;
 pub mod moving;
@@ -15,8 +15,8 @@ pub fn change_state(mut query: Query<(Entity, &mut NextState, &mut CurrentState)
             .remove::<IdleStateBundle>()
             .remove::<(SearchingNewBundle, Searching)>()
             .remove::<(SearchingFoodBundle, Searching)>()
-            .remove::<(MovingNewBundle, Moving)>()
-            .remove::<(MovingFoodBundle, Moving)>();
+            .remove::<(MovingNewBundle, Moving, RenderChanged)>()
+            .remove::<(MovingFoodBundle, Moving, RenderChanged)>();
 
             match next_state.0 {
                 States::Idle => { 
@@ -35,12 +35,12 @@ pub fn change_state(mut query: Query<(Entity, &mut NextState, &mut CurrentState)
                 },
 
                 States::MovingNew => { 
-                    commands.entity(entity).insert((MovingNewBundle, Moving)); 
+                    commands.entity(entity).insert((MovingNewBundle, Moving, RenderChanged)); 
                     current_state.0 = States::MovingNew;
                 },
 
                 States::MovingFood => { 
-                    commands.entity(entity).insert((MovingFoodBundle, Moving)); 
+                    commands.entity(entity).insert((MovingFoodBundle, Moving, RenderChanged)); 
                     current_state.0 = States::MovingFood;
                 },
 
