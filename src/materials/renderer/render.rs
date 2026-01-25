@@ -1,24 +1,41 @@
 use bevy::{prelude::*, render::storage::ShaderStorageBuffer};
 
-use crate::{bug_entity::components::{render_components::{BodyPartsIndexes, BugEntityRoot}, utils_components::Velocity}, food::fruit_entity::components::{FruitEntityRoot, NutritionalValue}, materials::renderer::{Renderer, components::{NoRender, RenderChanged}, resources::EntitiesToRender, shader_data::ShaderData}};
+use crate::{bug_entity::components::{attribute_components::PhysicalTraits, render_components::{BodyPartsIndexes, BugEntityRoot}, utils_components::Velocity}, constants::{ENTITY_DEFAULT_SIZE, FRUIT_DEFAULT_SIZE}, food::fruit_entity::components::{FruitEntityRoot, NutritionalValue}, materials::renderer::{Renderer, components::{NoRender, RenderChanged}, resources::EntitiesToRender, shader_data::ShaderData}, scene::components::MainCamera, utils::is_within_camera};
 
 pub fn available_for_rendering
 (
-    bug_query: Query<(Entity, &ViewVisibility, Option<&NoRender>), (With<BugEntityRoot>, With<RenderChanged>)>,
-    fruit_query: Query<(Entity, &ViewVisibility, Option<&NoRender>), (With<FruitEntityRoot>, With<RenderChanged>)>,
+    bug_query: Query<(Entity, &PhysicalTraits, &GlobalTransform, Option<&NoRender>), (With<BugEntityRoot>, With<RenderChanged>)>,
+    fruit_query: Query<(Entity, &GlobalTransform, Option<&NoRender>), (With<FruitEntityRoot>, With<RenderChanged>)>,
+    camera: Single<(&GlobalTransform, &Projection), With<MainCamera>>,
     mut commands: Commands
 ) 
 {
-    for (entity, visibility, no_render) in &bug_query {
-        match (visibility.get(), no_render.is_some()) {
+    let (camera_transform, camera_projection) = camera.into_inner();
+    
+    for (entity, physical_traits, global_transform, no_render) in &bug_query {
+        let is_within_camera = is_within_camera(
+            global_transform, 
+            (ENTITY_DEFAULT_SIZE.0 * physical_traits.size, ENTITY_DEFAULT_SIZE.1 * physical_traits.size), 
+            camera_transform, 
+            camera_projection
+        );
+
+        match (is_within_camera, no_render.is_some()) {
             (true, true) => { commands.entity(entity).remove::<NoRender>(); },
             (false, false) => { commands.entity(entity).insert(NoRender); },
             _ => {}
         }
     }
 
-    for (entity, visibility, no_render) in &fruit_query {
-        match (visibility.get(), no_render.is_some()) {
+    for (entity, global_transform, no_render) in &fruit_query {
+        let is_within_camera = is_within_camera(
+            global_transform, 
+            FRUIT_DEFAULT_SIZE, 
+            camera_transform, 
+            camera_projection
+        );
+
+        match (is_within_camera, no_render.is_some()) {
             (true, true) => { commands.entity(entity).remove::<NoRender>(); },
             (false, false) => { commands.entity(entity).insert(NoRender); },
             _ => {}
@@ -38,6 +55,8 @@ pub fn update_renderer
     time: Res<Time>
 ) 
 {
+    entities_to_render.dirty = false;
+
     for (entity, transform, velocity, indexes) in &bug_query {
         if let Some(&idx) = entities_to_render.indexes.get(&entity) {
             entities_to_render.data[idx] = ShaderData::create_for_entity( 
@@ -63,6 +82,8 @@ pub fn update_renderer
 
             entities_to_render.indexes.insert(entity, idx);
         }
+
+        entities_to_render.dirty = true;
     }
 
     for (entity, transform, nutritional_value) in &fruit_query {
@@ -84,9 +105,11 @@ pub fn update_renderer
 
             entities_to_render.indexes.insert(entity, idx);
         }
+
+        entities_to_render.dirty = true;
     }
 
-    if entities_to_render.data.len() > 0 {
+    if entities_to_render.dirty {
 
         if let Some(mat_handle) = material_query.iter().next() {
         

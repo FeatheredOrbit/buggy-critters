@@ -1,5 +1,7 @@
+use bevy::camera::visibility::NoFrustumCulling;
 use bevy::prelude::*;
 
+use crate::constants::{AMOUNT_OF_FRUITS, FRUIT_DEFAULT_SIZE};
 use crate::food::fruit_entity::components::*;
 use crate::materials::renderer::resources::RendererHandle;
 
@@ -10,9 +12,9 @@ pub fn spawn
     renderer_handle: Res<RendererHandle>
 ) 
 {
-    let mesh_handle = meshes.add(Mesh::from(Rectangle::new(120.0, 120.0)));
+    let mesh_handle = meshes.add(Mesh::from(Rectangle::new(FRUIT_DEFAULT_SIZE.0, FRUIT_DEFAULT_SIZE.1)));
 
-    for i in 0..1 {
+    for i in 0..AMOUNT_OF_FRUITS {
 
         commands.spawn(())
 
@@ -36,7 +38,7 @@ pub fn spawn
         .insert((
             Mesh2d(mesh_handle.clone()),
             MeshMaterial2d(renderer_handle.0.clone()),
-            Visibility::Visible
+            NoFrustumCulling
         ));
 
     }

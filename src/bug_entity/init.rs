@@ -1,5 +1,5 @@
-use bevy::prelude::*;
-use crate::{bug_entity::components::{attribute_components::*, debug_components::*, idle_components::*, moving_components::*, render_components::*, shared_components::*, utils_components::*}, constants::{AMOUNT_OF_ENTITIES, CHUNKY_BODY_ATLAS_INDEX, CHUNKY_HEAD_ATLAS_INDEX, CURVED_LEGS_ATLAS_INDEX}, materials::renderer::resources::RendererHandle};
+use bevy::{camera::visibility::NoFrustumCulling, prelude::*};
+use crate::{bug_entity::components::{attribute_components::*, debug_components::*, idle_components::*, moving_components::*, render_components::*, shared_components::*, utils_components::*}, constants::{AMOUNT_OF_ENTITIES, CHUNKY_BODY_ATLAS_INDEX, CHUNKY_HEAD_ATLAS_INDEX, CURVED_LEGS_ATLAS_INDEX, ENTITY_DEFAULT_SIZE}, materials::renderer::resources::RendererHandle};
 
 pub fn spawn
 (
@@ -8,7 +8,7 @@ pub fn spawn
     renderer_handle: Res<RendererHandle>
 ) 
 {
-    let mesh = Mesh::from(Rectangle::new(120.0, 120.0));
+    let mesh = Mesh::from(Rectangle::new(ENTITY_DEFAULT_SIZE.0, ENTITY_DEFAULT_SIZE.1));
 
     let mesh_handle = meshes.add(mesh);
         
@@ -74,7 +74,7 @@ pub fn spawn
         commands.entity(entity).insert((
             Mesh2d(mesh_handle.clone()),
             MeshMaterial2d(renderer_handle.0.clone()),
-            Visibility::Visible
+            NoFrustumCulling
         ));
 
     }

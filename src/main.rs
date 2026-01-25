@@ -7,6 +7,7 @@ mod bug_entity;
 mod scene;
 mod food;
 mod constants;
+mod utils;
 
 mod materials;
 mod resources;
