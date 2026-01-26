@@ -3,15 +3,6 @@
 version = 4
 
 [[package]]
-name = "Evolution_Sim"
-version = "0.1.0"
-dependencies = [
- "bevy",
- "bytemuck",
- "rand 0.8.5",
-]
-
-[[package]]
 name = "ab_glyph"
 version = "0.2.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1672,6 +1663,15 @@ dependencies = [
  "futures-io",
  "futures-lite",
  "piper",
+]
+
+[[package]]
+name = "buggy_critters"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "bytemuck",
+ "rand 0.8.5",
 ]
 
 [[package]]

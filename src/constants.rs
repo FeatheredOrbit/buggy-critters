@@ -18,7 +18,7 @@ pub const CHUNKY_BODY_ATLAS_INDEX: u32 = 1;
 pub const CURVED_LEGS_ATLAS_INDEX: u32 = 2;
 
 pub const ENTITY_DEFAULT_SIZE: (f32, f32) = (120.0, 120.0);
-pub const AMOUNT_OF_ENTITIES: usize = 10;
+pub const AMOUNT_OF_ENTITIES: usize = 500;
 
 pub const FRUIT_DEFAULT_SIZE: (f32, f32) = (120.0, 120.0);
 pub const AMOUNT_OF_FRUITS: usize = 1;

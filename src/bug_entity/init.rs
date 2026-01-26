@@ -17,7 +17,7 @@ pub fn spawn
         
         // Its transform component
         commands.entity(entity).insert((
-            Transform::from_xyz(500.0, 500.0, -(i as f32)),
+            Transform::from_xyz(0.0, 0.0, -(i as f32)),
             GlobalTransform::default()
         ));
 

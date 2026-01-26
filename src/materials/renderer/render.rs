@@ -2,6 +2,7 @@ use bevy::{prelude::*, render::storage::ShaderStorageBuffer};
 
 use crate::{bug_entity::components::{attribute_components::PhysicalTraits, render_components::{BodyPartsIndexes, BugEntityRoot}, utils_components::Velocity}, constants::{ENTITY_DEFAULT_SIZE, FRUIT_DEFAULT_SIZE}, food::fruit_entity::components::{FruitEntityRoot, NutritionalValue}, materials::renderer::{Renderer, components::{NoRender, RenderChanged}, resources::EntitiesToRender, shader_data::ShaderData}, scene::components::MainCamera, utils::is_within_camera};
 
+/// Checks if entities who went through a visible change are currently on screen.
 pub fn available_for_rendering
 (
     bug_query: Query<(Entity, &PhysicalTraits, &GlobalTransform, Option<&NoRender>), (With<BugEntityRoot>, With<RenderChanged>)>,

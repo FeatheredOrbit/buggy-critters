@@ -21,10 +21,11 @@ use resources::{EntityGrid, FruitGrid, CurrentlySelectedEntity};
 
 fn main() {
     App::new()
-        
         .insert_resource(EntityGrid(HashMap::new()))
         .insert_resource(FruitGrid(HashMap::new()))
         .insert_resource(CurrentlySelectedEntity(None))
+        .add_plugins(FrameTimeDiagnosticsPlugin::default())
+        .add_plugins(LogDiagnosticsPlugin::default())
         .add_plugins(DefaultPlugins)
         .add_plugins(MaterialLoaderPlugin)
         .add_plugins(SceneManagerPlugin)
