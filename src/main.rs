@@ -8,7 +8,6 @@ mod scene;
 mod food;
 mod constants;
 mod utils;
-mod compute;
 
 mod materials;
 mod resources;
@@ -26,8 +25,6 @@ fn main() {
         .insert_resource(EntityGrid(HashMap::new()))
         .insert_resource(FruitGrid(HashMap::new()))
         .insert_resource(CurrentlySelectedEntity(None))
-        .add_plugins(FrameTimeDiagnosticsPlugin::default())
-        .add_plugins(LogDiagnosticsPlugin::default())
 
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
