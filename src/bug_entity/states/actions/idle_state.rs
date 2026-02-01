@@ -13,24 +13,20 @@ pub fn idle_state(
         idle_bundle.time_to_action -= time.delta_secs();
 
         if idle_bundle.time_to_action <= 0.0 {
-            find_next_state(entity, &idle_bundle.idle_behaviours, &mut rng, &mut commands);
+            find_next_state(entity, &idle_bundle, &mut rng, &mut commands);
             idle_bundle.time_to_action = idle_bundle.action_timer;
         }
     }
 }
 
-fn find_next_state(entity: Entity, behaviours: &Vec<IdleBehaviour>, rng: &mut RngComponent, mut commands: &mut Commands) {
-    let mut probability: i32 = 0;
-
-    for behaviour in behaviours.iter() {
-        probability += behaviour.weight;
-    }
+fn find_next_state(entity: Entity, idle_bundle: &IdleStateBundle, rng: &mut RngComponent, mut commands: &mut Commands) {
+    let probability: i32 = idle_bundle.idle_behaviours_cumulative_weight;
 
     let mut cumulative = 0;
 
     let chance = rng.0.random_range(0..probability);
 
-    for behaviour in behaviours.iter() {
+    for behaviour in idle_bundle.idle_behaviours.iter() {
         cumulative += behaviour.weight;
 
         if cumulative > chance {

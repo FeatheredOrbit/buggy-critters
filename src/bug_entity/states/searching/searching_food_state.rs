@@ -25,6 +25,11 @@ pub fn searching_food_state(
                     }
 
                 }
+                else {
+                    if search_position_random(transform, &mut future_transform, physical_traits, &mut rng) {
+                        commands.entity(entity).insert(StateChangeRequired(States::MovingFood));
+                    }
+                }
             }
         }
 

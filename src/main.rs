@@ -34,6 +34,10 @@ fn main() {
             ..Default::default()
         }))
         
+        .add_plugins((
+            FrameTimeDiagnosticsPlugin::default(), 
+            LogDiagnosticsPlugin::default()
+        ))
         .add_plugins(MaterialLoaderPlugin)
         .add_plugins(SceneManagerPlugin)
         .add_plugins(FoodPlugin)
