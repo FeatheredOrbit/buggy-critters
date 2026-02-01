@@ -4,3 +4,4 @@
 [Reminders]
 Finish "searching_position_food" in searching_utils.rs
 Finish "moving_food_state" in moving_food_state.rs
+An entity dying or entity being born should throw an event "Update Largest Sight Radius"

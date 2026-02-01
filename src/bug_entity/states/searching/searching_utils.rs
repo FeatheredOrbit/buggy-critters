@@ -7,8 +7,6 @@ use rand::Rng;
 use crate::bug_entity::components::shared_components::RngComponent;
 use crate::bug_entity::components::{attribute_components::PhysicalTraits, shared_components::FutureTransform}; 
 
-use crate::food::fruit_entity::components::FruitEntityRoot;
-
 pub fn search_position_random(
     transform: &Transform, 
     future_transform: &mut FutureTransform, 
@@ -48,8 +46,7 @@ pub fn search_position_food(
     transform: &Transform, 
     future_transform: &mut FutureTransform, 
     traits: &PhysicalTraits, 
-    fruits: &Vec<Entity>, 
-    fruit_query: Query<&Transform, With<FruitEntityRoot>>,
+    fruits: &Vec<(Entity, Transform)>,
     rng: &mut RngComponent
 ) -> bool {
 
@@ -61,35 +58,30 @@ pub fn search_position_food(
 
     for fruit in fruits {
 
-        if let Ok(fruit_transform) = fruit_query.get(*fruit) {
+        let fruit_position = fruit.1.translation.xy();
 
-            let fruit_position = fruit_transform.translation.xy();
+        let distance = current_position.distance(fruit_position);
 
-            let distance = current_position.distance(fruit_position);
-
-            if distance < closest_distance {
-                closest_distance = distance;
-                next_position = fruit_position;
-            }
-
+        if distance < closest_distance {
+            closest_distance = distance;
+            next_position = fruit_position;
         }
-
-        if closest_distance <= traits.sight {
-
-            let direction = next_position - current_position;
-
-            let next_angle = direction.y.atan2(direction.x);
-            let next_quat = Quat::from_rotation_z(next_angle);
-            
-            future_transform.position = Vec3 { x: (next_position.x), y: (next_position.y), z: (0.0) };
-            future_transform.angle = next_quat;
-
-            return true;
-        }
-
-        return search_position_random(transform, future_transform, traits, rng);
 
     }
 
+    if closest_distance <= traits.sight {
+
+        let direction = next_position - current_position;
+
+        let next_angle = direction.y.atan2(direction.x);
+        let next_quat = Quat::from_rotation_z(next_angle);
+            
+        future_transform.position = Vec3 { x: (next_position.x), y: (next_position.y), z: (0.0) };
+        future_transform.angle = next_quat;
+
+        return true;
+    }
+
     return search_position_random(transform, future_transform, traits, rng);
+
 }
