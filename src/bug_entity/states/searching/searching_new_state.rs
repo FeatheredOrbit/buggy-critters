@@ -1,12 +1,16 @@
 use bevy::prelude::*;
 
-use crate::bug_entity::components::{attribute_components::PhysicalTraits, render_components::*, shared_components::{NextState, States, *}};
+use crate::bug_entity::components::{attribute_components::PhysicalTraits, render_components::*, shared_components::{States, *}};
 use crate::bug_entity::states::searching::searching_utils::*;
 
-pub fn searching_new_state(mut query: Query<(&Transform, &mut FutureTransform, &PhysicalTraits, &mut NextState), (With<SearchingNewBundle>, With<BugEntityRoot>)>) {
-    for (transform, mut future_transform, physical_traits, mut next_state) in &mut query {
-        if search_position_random(transform, &mut future_transform, physical_traits) {
-            next_state.0 = States::MovingNew;
+pub fn searching_new_state(
+    mut query: Query<(Entity, &Transform, &mut FutureTransform, &PhysicalTraits, &mut RngComponent), 
+        (With<BugEntityRoot>, With<Searching>, With<SearchingNew>)>,
+    mut commands: Commands
+) {
+    for (entity, transform, mut future_transform, physical_traits, mut rng) in &mut query {
+        if search_position_random(transform, &mut future_transform, physical_traits, &mut rng) {
+            commands.entity(entity).insert(StateChangeRequired(States::MovingNew));
         }
 
     }

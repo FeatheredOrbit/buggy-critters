@@ -2,22 +2,26 @@ use core::f32;
 use std::f32::consts::PI;
 
 use bevy::prelude::*;
-use rand::{thread_rng, Rng};
+use rand::Rng;
 
+use crate::bug_entity::components::shared_components::RngComponent;
 use crate::bug_entity::components::{attribute_components::PhysicalTraits, shared_components::FutureTransform}; 
 
 use crate::food::fruit_entity::components::FruitEntityRoot;
 
-pub fn search_position_random(transform: &Transform, future_transform: &mut FutureTransform, traits: &PhysicalTraits) -> bool {
+pub fn search_position_random(
+    transform: &Transform, 
+    future_transform: &mut FutureTransform, 
+    traits: &PhysicalTraits, 
+    rng: &mut RngComponent
+) -> bool {
 
     let current_position = Vec2::new(transform.translation.x, transform.translation.y);
     let range = traits.sight;
 
-    let mut rng = thread_rng();
+    let angle = rng.0.random_range(0.0..=(PI * 2.0));
 
-    let angle = rng.gen_range(0.0..=(PI * 2.0));
-
-    let radius: f32 = rng.gen_range(0.0..=1.0);
+    let radius: f32 = rng.0.random_range(0.0..=1.0);
     let radius = radius.sqrt() * range;
 
     let offset = Vec2::new(
@@ -40,7 +44,14 @@ pub fn search_position_random(transform: &Transform, future_transform: &mut Futu
     
 }
 
-pub fn search_position_food(transform: &Transform, future_transform: &mut FutureTransform, traits: &PhysicalTraits, fruits: &Vec<Entity>, fruit_query: Query<&Transform, With<FruitEntityRoot>>) -> bool {
+pub fn search_position_food(
+    transform: &Transform, 
+    future_transform: &mut FutureTransform, 
+    traits: &PhysicalTraits, 
+    fruits: &Vec<Entity>, 
+    fruit_query: Query<&Transform, With<FruitEntityRoot>>,
+    rng: &mut RngComponent
+) -> bool {
 
     let mut closest_distance = f32::INFINITY;
     let mut next_position = Vec2::ZERO;
@@ -76,9 +87,9 @@ pub fn search_position_food(transform: &Transform, future_transform: &mut Future
             return true;
         }
 
-        return search_position_random(transform, future_transform, traits);
+        return search_position_random(transform, future_transform, traits, rng);
 
     }
 
-    return search_position_random(transform, future_transform, traits);
+    return search_position_random(transform, future_transform, traits, rng);
 }

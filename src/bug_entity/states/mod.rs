@@ -1,53 +1,67 @@
 use bevy::prelude::*;
 
-use crate::{bug_entity::components::{idle_components::IdleStateBundle, render_components::BugEntityRoot, shared_components::{NextState, States, *}}, materials::renderer::components::RenderChanged};
+use crate::{bug_entity::components::{render_components::BugEntityRoot, shared_components::{States, *}}, materials::renderer::components::RenderChanged};
 
 pub mod actions;
 pub mod moving;
 pub mod searching;
 
-pub fn change_state(mut query: Query<(Entity, &mut NextState, &mut CurrentState), With<BugEntityRoot>>, mut commands: Commands) {
-    for (entity, mut next_state, mut current_state) in &mut query {
+pub fn change_state(
+    mut query: Query<(Entity, &StateChangeRequired, &mut CurrentState), With<BugEntityRoot>>, 
+    mut commands: Commands
+) {
+    for (entity, next_state, mut current_state) in &mut query {
 
-        if next_state.0 != States::None {
+        if next_state.0 == States::None { unreachable!() }
 
-            commands.entity(entity)
-            .remove::<IdleStateBundle>()
-            .remove::<(SearchingNewBundle, Searching)>()
-            .remove::<(SearchingFoodBundle, Searching)>()
-            .remove::<(MovingNewBundle, Moving, RenderChanged)>()
-            .remove::<(MovingFoodBundle, Moving, RenderChanged)>();
-
-            match next_state.0 {
-                States::Idle => { 
-                    commands.entity(entity).insert(IdleStateBundle::default()); 
-                    current_state.0 = States::Idle;
-                },
-
-                States::SearchingNew => { 
-                    commands.entity(entity).insert((SearchingNewBundle, Searching)); 
-                    current_state.0 = States::SearchingNew;
-                },
-
-                States::SearchingFood => { 
-                    commands.entity(entity).insert((SearchingFoodBundle, Searching)); 
-                    current_state.0 = States::SearchingFood;
-                },
-
-                States::MovingNew => { 
-                    commands.entity(entity).insert((MovingNewBundle, Moving, RenderChanged)); 
-                    current_state.0 = States::MovingNew;
-                },
-
-                States::MovingFood => { 
-                    commands.entity(entity).insert((MovingFoodBundle, Moving, RenderChanged)); 
-                    current_state.0 = States::MovingFood;
-                },
-
-                States::None => { commands.entity(entity).insert(()); }
-            };
-
-            next_state.0 = States::None;
+        match current_state.0 {
+            States::Idle => {
+                commands.entity(entity).remove::<(Action, Idling)>();
+            },
+            States::SearchingNew => {
+                commands.entity(entity).remove::<(Searching, SearchingNew)>();
+            },
+            States::SearchingFood => {
+                commands.entity(entity).remove::<(Searching, SearchingFood)>();
+            },
+            States::MovingNew => {
+                commands.entity(entity).remove::<(Moving, MovingNew)>();
+            },
+            States::MovingFood => {
+                commands.entity(entity).remove::<(Moving, MovingFood)>();
+            },
+            States::None => {}
         }
+
+        match next_state.0 {
+            States::Idle => { 
+                commands.entity(entity).insert((Action, Idling)); 
+                current_state.0 = States::Idle;
+            },
+
+            States::SearchingNew => { 
+                commands.entity(entity).insert((Searching, SearchingNew)); 
+                current_state.0 = States::SearchingNew;
+            },
+
+            States::SearchingFood => { 
+                commands.entity(entity).insert((Searching, SearchingFood)); 
+                current_state.0 = States::SearchingFood;
+            },
+
+            States::MovingNew => { 
+                commands.entity(entity).insert((Moving, MovingNew, RenderChanged)); 
+                current_state.0 = States::MovingNew;
+            },
+
+            States::MovingFood => { 
+                commands.entity(entity).insert((Moving, MovingFood, RenderChanged)); 
+                current_state.0 = States::MovingFood;
+            },
+
+            States::None => { commands.entity(entity).insert(()); }
+        };
+
+        commands.entity(entity).remove::<StateChangeRequired>();
     }
 }

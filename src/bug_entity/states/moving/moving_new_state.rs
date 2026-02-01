@@ -1,10 +1,17 @@
 use bevy::prelude::*;
 
-use crate::bug_entity::components::{render_components::*, shared_components::{*, NextState, States}, moving_components::*, attribute_components::*};
+use crate::bug_entity::components::{render_components::*, shared_components::{*, States}, moving_components::*, attribute_components::*};
 use crate::bug_entity::states::moving::moving_utils::*;
 
-pub fn moving_new_state(mut query: Query<(&mut Transform, &FutureTransform, &mut CurrentlyRotating, &mut CurrentlyMoving, &PhysicalTraits, &MovementPattern, &mut NextState), (With<MovingNewBundle>, With<BugEntityRoot>)>, time: Res<Time>) {
-    for (mut transform, future_transform, mut currently_rotating, mut currently_moving, physical_traits, movement_pattern, mut next_state) in &mut query {
+pub fn moving_new_state(
+    mut query: Query<(Entity, &mut Transform, &FutureTransform, &mut CurrentlyRotating, &mut CurrentlyMoving, &PhysicalTraits, &MovementPattern), 
+        (With<BugEntityRoot>, With<Moving>, With<MovingNew>)>, 
+    mut commands: Commands,
+    time: Res<Time>
+) {
+    for (entity, mut transform, future_transform, mut currently_rotating, 
+        mut currently_moving, physical_traits, movement_pattern
+    ) in &mut query {
 
         let rotate_function: fn(&mut Transform, &FutureTransform, &PhysicalTraits, &Time) -> bool;
         let move_function: fn(&mut Transform, &FutureTransform, &PhysicalTraits, &Time) -> bool;
@@ -35,7 +42,7 @@ pub fn moving_new_state(mut query: Query<(&mut Transform, &FutureTransform, &mut
             currently_rotating.0 = true;
             currently_moving.0 = false;
 
-            next_state.0 = States::Idle;
+            commands.entity(entity).insert(StateChangeRequired(States::Idle));
         }
 
     }

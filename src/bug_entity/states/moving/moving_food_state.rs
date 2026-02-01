@@ -1,19 +1,20 @@
 use bevy::prelude::*;
 
-use crate::{constants::{GRID_CELL_HEIGHT, GRID_CELL_WIDTH}, bug_entity::components::{moving_components::*, shared_components::{NextState, States, *}, attribute_components::*, render_components::BugEntityRoot}, food::fruit_entity::components::FruitEntityRoot, resources::FruitGrid};
+use crate::{constants::{GRID_CELL_HEIGHT, GRID_CELL_WIDTH}, bug_entity::components::{moving_components::*, shared_components::{States, *}, attribute_components::*, render_components::BugEntityRoot}, food::fruit_entity::components::FruitEntityRoot, resources::FruitGrid};
 use crate::bug_entity::states::moving::moving_utils::*;
 
 pub fn moving_food_state(
-    mut query: Query<(&mut Transform, &FutureTransform, &mut CurrentlyRotating, &mut CurrentlyMoving, &PhysicalTraits, &MovementPattern, &mut NextState),
-        (With<MovingFoodBundle>, (With<BugEntityRoot>, Without<FruitEntityRoot>))>,
+    mut query: Query<(Entity, &mut Transform, &FutureTransform, &mut CurrentlyRotating, &mut CurrentlyMoving, &PhysicalTraits, &MovementPattern),
+        (With<BugEntityRoot>, With<Moving>, With<MovingFood>, Without<FruitEntityRoot>)>,
     fruit_query: Query<&Transform, (With<FruitEntityRoot>, Without<BugEntityRoot>)>,
     fruit_grid: Res<FruitGrid>,
+    mut commands: Commands,
     time: Res<Time>
 ) {
     for (
-            mut transform, future_transform,
+            entity, mut transform, future_transform,
             mut currently_rotating, mut currently_moving, physical_traits, 
-            movement_pattern, mut next_state
+            movement_pattern
         ) in &mut query {
 
         let rotate_function: fn(&mut Transform, &FutureTransform, &PhysicalTraits, &Time) -> bool;
@@ -46,8 +47,10 @@ pub fn moving_food_state(
             currently_moving.0 = false;
 
             if is_food_nearby(&transform, physical_traits, fruit_query, &fruit_grid) {
-                next_state.0 = States::Idle;
-            } else { next_state.0 = States::SearchingFood };
+                commands.entity(entity).insert(StateChangeRequired(States::Idle));
+            } else {
+                commands.entity(entity).insert(StateChangeRequired(States::SearchingFood));
+            };
         }
 
     }

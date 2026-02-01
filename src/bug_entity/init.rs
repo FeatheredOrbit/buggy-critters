@@ -13,6 +13,8 @@ pub fn spawn
     let mesh_handle = meshes.add(mesh);
         
     for i in 0..AMOUNT_OF_ENTITIES {
+        let mut rng = RngComponent::default();
+
         let entity = commands.spawn(()).id();
         
         // Its transform component
@@ -25,22 +27,23 @@ pub fn spawn
         commands.entity(entity).insert(BugEntityRoot);
 
         // Atrribute components
-        let physical_traits = PhysicalTraits::new();
-        let vitals = Vitals::new(&physical_traits);
+        let physical_traits = PhysicalTraits::new(&mut rng);
+        let vitals = Vitals::new(&physical_traits, &mut rng);
 
         commands.entity(entity).insert((
             physical_traits,
             vitals
         ));
     
-        // Component for handling what state to move to and the current state
-        commands.entity(entity).insert((
-            NextState(crate::bug_entity::components::shared_components::States::None),
-            CurrentState(crate::bug_entity::components::shared_components::States::Idle)
-        ));
+        // Component for holding current state
+        commands.entity(entity).insert(CurrentState(crate::bug_entity::components::shared_components::States::Idle));
 
-        // Bundle for the idle state
-        commands.entity(entity).insert(IdleStateBundle::default());
+        // Bundles and identifier for idle state
+        commands.entity(entity).insert((
+            Action,
+            Idling,
+            IdleStateBundle::default(&mut rng)
+        ));
 
         // Initialize components for moving states
         commands.entity(entity).insert((
@@ -67,7 +70,8 @@ pub fn spawn
         // Utils components
         commands.entity(entity).insert((
             PreviousTransform(Vec2 { x: (0.0), y: (0.0) }),
-            Velocity(Vec2 { x: (0.0), y: (0.0) })
+            Velocity(Vec2 { x: (0.0), y: (0.0) }),
+            rng
         ));
 
         // Rendering components

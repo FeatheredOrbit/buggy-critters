@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use rand::{SeedableRng, rngs::SmallRng};
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Utils
@@ -8,6 +9,14 @@ use bevy::prelude::*;
 pub struct FutureTransform {
     pub position: Vec3,
     pub angle: Quat
+}
+
+#[derive(Component)]
+pub struct RngComponent(pub SmallRng);
+impl Default for RngComponent {
+    fn default() -> Self {
+        Self(SmallRng::from_os_rng())
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -24,11 +33,25 @@ pub enum States {
     None
 }
 
+// Signals requirement for a change in state and stores the next state.
+#[derive(Component)]
+pub struct StateChangeRequired(pub States);
+
+// Stores the current state.
 #[derive(Component)]
 pub struct CurrentState(pub States);
 
-#[derive(Component, Debug)]
-pub struct NextState(pub States);
+
+// Action states
+
+// Common identifier
+#[derive(Component)]
+pub struct Action;
+
+//Specific identifiers
+#[derive(Component)]
+pub struct Idling;
+
 
 // Searching states
 
@@ -36,11 +59,13 @@ pub struct NextState(pub States);
 #[derive(Component)]
 pub struct Searching;
 
+//Specific identifiers
 #[derive(Component)]
-pub struct SearchingNewBundle;
+pub struct SearchingNew;
 
 #[derive(Component)]
-pub struct SearchingFoodBundle;
+pub struct SearchingFood;
+
 
 // Moving states
 
@@ -48,10 +73,9 @@ pub struct SearchingFoodBundle;
 #[derive(Component)]
 pub struct Moving;
 
+//Specific identifiers
 #[derive(Component)]
-pub struct MovingNewBundle;
+pub struct MovingNew;
 
 #[derive(Component)]
-pub struct MovingFoodBundle;
-
-
+pub struct MovingFood;
