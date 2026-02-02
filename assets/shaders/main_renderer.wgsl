@@ -1,11 +1,14 @@
 #import bevy_sprite::mesh2d_functions::mesh2d_position_local_to_clip;
 
+const BUG_ENTITY: u32 = 0;
+const FRUIT_ENTITY: u32 = 1;
+
 struct ShaderData {
     // Transform matrix, format is the same for anything.
     transform: mat4x4<f32>,
 
     // What does this data represent?
-    // Values [0, 1] represent [entity, fruit] respectively.
+    // Values [0, 1] represent [bug, fruit] respectively.
     data_type: u32,
 
     // First packet of information.
@@ -85,10 +88,10 @@ fn vertex(in: VertexInput) -> VertexOutput {
 
 @fragment
 fn fragment(in: VertexOutput) -> @location(0) vec4<f32> {
-    if in.data_type == 0 {
+    if in.data_type == BUG_ENTITY {
         return entity_fragment(in);
     }
-    if in.data_type == 1 {
+    if in.data_type == FRUIT_ENTITY {
         return fruit_fragment(in);
     }
     else {

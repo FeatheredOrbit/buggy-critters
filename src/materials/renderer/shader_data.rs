@@ -7,7 +7,7 @@ pub struct ShaderData {
     pub transform: [[f32;4];4],
 
     // What does this data represent?
-    // Values [0, 1] represent [entity, fruit] respectively.
+    // Values [0, 1] represent [bug, fruit] respectively.
     pub data_type: u32,
 
     pub _pad: [u32; 3],

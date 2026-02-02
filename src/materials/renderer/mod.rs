@@ -67,12 +67,12 @@ impl Plugin for RendererPlugin {
 
         app.insert_resource(EntitiesToRender::default());
         app.add_plugins(Material2dPlugin::<Renderer>::default());
-        app.add_systems(PreStartup, compile_and_init_renderer);
+        app.add_systems(PreStartup, compile_and_init);
         app.add_systems(Update, (available_for_rendering, update_renderer).chain());
     }
 }
 
-fn compile_and_init_renderer
+fn compile_and_init
 (
     mut commands: Commands, 
     mut render: ResMut<Assets<Renderer>>,
