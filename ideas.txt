@@ -4,4 +4,6 @@
 [Reminders]
 Finish "searching_position_food" in searching_utils.rs
 Finish "moving_food_state" in moving_food_state.rs
+Remove the function in entity mod file that kills it after 3 seconds after death animation is finished
+Add an event to handle entity death, the event must spawn the explosion component and also remove the entity from the renderer gpu data before despawning it 
 An entity dying or entity being born should throw an event "Update Largest Sight Radius"

@@ -1,4 +1,4 @@
-use bevy::render::render_resource::ShaderType;
+use bevy::{ecs::entity::Entity, render::render_resource::ShaderType};
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy, bytemuck::Zeroable, bytemuck::Pod, ShaderType)]

@@ -5,7 +5,7 @@ use crate::bug_entity::states::moving::moving_utils::*;
 
 pub fn moving_new_state(
     mut query: Query<(Entity, &mut Transform, &FutureTransform, &mut CurrentlyRotating, &mut CurrentlyMoving, &PhysicalTraits, &MovementPattern), 
-        (With<BugEntityRoot>, With<Moving>, With<MovingNew>)>, 
+        (With<BugEntityRoot>, With<Moving>, With<MovingNew>, Without<Dead>)>, 
     mut commands: Commands,
     time: Res<Time>
 ) {

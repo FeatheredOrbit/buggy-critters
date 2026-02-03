@@ -1,6 +1,6 @@
 use bevy::{ecs::relationship::RelationshipSourceCollection, prelude::*};
 
-use crate::{bug_entity::components::{attribute_components::PhysicalTraits, render_components::BugEntityRoot}, events::labels::{LargestSightUpdateType, UpdateLargestSight}, resources::LargestEntitySight};
+use crate::{bug_entity::components::{attribute_components::PhysicalTraits, render_components::BugEntityRoot}, events::labels::{HandleEntityDeathEvent, LargestSightUpdateType, UpdateLargestSightEvent}, materials::renderer::resources::EntitiesToRender, resources::LargestEntitySight};
 
 pub mod labels;
 
@@ -12,7 +12,7 @@ impl Plugin for SetupEventsPlugin {
 }
 
 pub fn update_largest_sight_event(
-    event: On<UpdateLargestSight>,
+    event: On<UpdateLargestSightEvent>,
     query: Query<(Entity, &PhysicalTraits), With<BugEntityRoot>>,
     mut largest_entity_sight: ResMut<LargestEntitySight>
 ) {
@@ -57,4 +57,14 @@ pub fn update_largest_sight_event(
             }
         }
     }
+}
+
+pub fn handle_entity_death_event(
+    event: On<HandleEntityDeathEvent>,
+    mut entities_to_render: ResMut<EntitiesToRender>,
+    mut commands: Commands
+) {
+    let (entity, transform) = event.0;
+
+    if let Some(_) = entities_to_render.data.remove(&entity) {}
 }

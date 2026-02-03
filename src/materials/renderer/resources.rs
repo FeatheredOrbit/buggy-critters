@@ -9,7 +9,6 @@ pub struct RendererHandle(pub Handle<Renderer>);
 
 #[derive(Resource, Default)]
 pub struct EntitiesToRender {
-    pub data: Vec<ShaderData>,
-    pub indexes: HashMap<Entity, usize>,
+    pub data: HashMap<Entity, ShaderData>,
     pub dirty: bool
 }

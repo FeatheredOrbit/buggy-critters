@@ -79,3 +79,20 @@ pub struct MovingNew;
 
 #[derive(Component)]
 pub struct MovingFood;
+
+
+// Other states
+
+#[derive(Component)]
+pub struct Dead {
+    pub time_since_animation: f32,
+    pub animation_acceleration: f32
+}
+impl Default for Dead {
+    fn default() -> Self {
+        Self {
+            time_since_animation: 0.0,
+            animation_acceleration: 1.0 / 35.0
+        }
+    }
+}

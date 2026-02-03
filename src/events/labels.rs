@@ -7,4 +7,8 @@ pub enum LargestSightUpdateType {
 }
 
 #[derive(Event)]
-pub struct UpdateLargestSight(pub LargestSightUpdateType);
+pub struct UpdateLargestSightEvent(pub LargestSightUpdateType);
+
+
+#[derive(Event)]
+pub struct HandleEntityDeathEvent(pub (Entity, Transform)); 

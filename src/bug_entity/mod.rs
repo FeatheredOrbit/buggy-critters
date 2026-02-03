@@ -10,7 +10,7 @@ mod vitals;
 
 use states::*;
 use init::*;
-use states::actions::idle_state::*;
+use states::actions::{idle_state::*, death_state::*};
 use states::searching::{searching_new_state::*, searching_food_state::*};
 use states::moving::{moving_new_state::*, moving_food_state::*};
 
@@ -21,6 +21,8 @@ use utils::*;
 
 use ui::*;
 
+use crate::bug_entity::components::render_components::BugEntityRoot;
+use crate::bug_entity::components::shared_components::Dead;
 use crate::bug_entity::vitals::*;
 
 pub struct EntityPlugin;
@@ -32,7 +34,7 @@ impl Plugin for EntityPlugin {
 
         app.add_systems(PreUpdate, (update_entity_grid, ui_display, select_entity));
 
-        app.add_systems(FixedUpdate, (change_state, idle_state, searching_new_state, searching_food_state));
+        app.add_systems(FixedUpdate, (change_state, idle_state, searching_new_state, searching_food_state, death_state));
         app.add_systems(Update, (moving_new_state, moving_food_state));
 
         app.add_systems(Update, (hunger_handler, thirst_handler));
@@ -40,5 +42,17 @@ impl Plugin for EntityPlugin {
         app.add_systems(PostUpdate, update_velocity);
 
         app.add_systems(Last, draw_sight_radius);
+
+
+
+        app.add_systems(Update, kill);
+    }
+}
+
+fn kill(query: Query<Entity, (With<BugEntityRoot>, Without<Dead>)>, time: Res<Time>, mut commands: Commands) {
+    for entity in &query {
+        if time.elapsed_secs() >= 5.0 {
+            commands.entity(entity).insert(Dead::default());
+        }
     }
 }

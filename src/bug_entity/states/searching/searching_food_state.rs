@@ -5,7 +5,7 @@ use crate::bug_entity::states::searching::searching_utils::*;
 
 pub fn searching_food_state(
     mut query: Query<(Entity, &Transform, &mut FutureTransform, &PhysicalTraits, &mut RngComponent), 
-        (With<BugEntityRoot>, With<Searching>, With<SearchingFood>)>,
+        (With<BugEntityRoot>, With<Searching>, With<SearchingFood>, Without<Dead>)>,
     fruit_grid: Res<FruitGrid>,
     largest_entity_sight: Res<LargestEntitySight>,
     mut commands: Commands

@@ -59,8 +59,8 @@ pub fn update_renderer
     entities_to_render.dirty = false;
 
     for (entity, transform, velocity, indexes) in &bug_query {
-        if let Some(&idx) = entities_to_render.indexes.get(&entity) {
-            entities_to_render.data[idx] = ShaderData::create_for_entity( 
+        if let Some(shader_data) = entities_to_render.data.get_mut(&entity) {
+            *shader_data = ShaderData::create_for_entity( 
                 transform.compute_transform().to_matrix().to_cols_array_2d(), 
                 velocity.0.length(),
                 indexes.head,
@@ -69,42 +69,34 @@ pub fn update_renderer
             );
         }
         else {
-            entities_to_render.data.push(
-                ShaderData::create_for_entity( 
-                    transform.compute_transform().to_matrix().to_cols_array_2d(), 
-                    velocity.0.length(),
-                    indexes.head,
-                    indexes.body,
-                    indexes.legs
-                )
+            let shader_data = ShaderData::create_for_entity( 
+                transform.compute_transform().to_matrix().to_cols_array_2d(), 
+                velocity.0.length(),
+                indexes.head,
+                indexes.body,
+                indexes.legs
             );
 
-            let idx = entities_to_render.data.len() - 1;
-
-            entities_to_render.indexes.insert(entity, idx);
+            entities_to_render.data.insert(entity, shader_data);
         }
 
         entities_to_render.dirty = true;
     }
 
     for (entity, transform, nutritional_value) in &fruit_query {
-        if let Some(&idx) = entities_to_render.indexes.get(&entity) {
-            entities_to_render.data[idx] = ShaderData::create_for_fruit(
+        if let Some(shader_data) = entities_to_render.data.get_mut(&entity) {
+            *shader_data = ShaderData::create_for_fruit(
                 transform.compute_transform().to_matrix().to_cols_array_2d(), 
                 (1.0 / nutritional_value.0) * 250.0
             )
         }
         else {
-            entities_to_render.data.push(
-                ShaderData::create_for_fruit(
-                    transform.compute_transform().to_matrix().to_cols_array_2d(), 
-                    (1.0 / nutritional_value.0) * 250.0
-            )
+            let shader_data = ShaderData::create_for_fruit(
+                transform.compute_transform().to_matrix().to_cols_array_2d(), 
+                (1.0 / nutritional_value.0) * 250.0
             );
 
-            let idx = entities_to_render.data.len() - 1;
-
-            entities_to_render.indexes.insert(entity, idx);
+            entities_to_render.data.insert(entity, shader_data);
         }
 
         entities_to_render.dirty = true;
@@ -118,8 +110,10 @@ pub fn update_renderer
 
                 mat.time = time.elapsed_secs();
 
+                let data = Vec::from_iter(entities_to_render.data.values());
+
                 if let Some(buffer_asset) = storage_buffers.get_mut(&mat.entities) {
-                    buffer_asset.set_data(entities_to_render.data.clone());
+                    buffer_asset.set_data(data);
                 }
 
             }

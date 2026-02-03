@@ -7,7 +7,7 @@ pub mod moving;
 pub mod searching;
 
 pub fn change_state(
-    mut query: Query<(Entity, &StateChangeRequired, &mut CurrentState), With<BugEntityRoot>>, 
+    mut query: Query<(Entity, &StateChangeRequired, &mut CurrentState), (With<BugEntityRoot>, Without<Dead>)>, 
     mut commands: Commands
 ) {
     for (entity, next_state, mut current_state) in &mut query {

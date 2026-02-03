@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 use rand::Rng;
 
-use crate::bug_entity::components::{idle_components::*, render_components::BugEntityRoot, shared_components::{Action, Idling, RngComponent, StateChangeRequired, States}};
+use crate::bug_entity::components::{idle_components::*, render_components::BugEntityRoot, shared_components::{Action, Dead, Idling, RngComponent, StateChangeRequired, States}};
 
 pub fn idle_state(
-    mut query: Query<(Entity, &mut IdleStateBundle, &mut RngComponent), (With<BugEntityRoot>, With<Action>, With<Idling>)>, 
+    mut query: Query<(Entity, &mut IdleStateBundle, &mut RngComponent), (With<BugEntityRoot>, With<Action>, With<Idling>, Without<Dead>)>, 
     time: Res<Time>,
     mut commands: Commands
 ) {

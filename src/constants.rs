@@ -13,4 +13,4 @@ pub const ENTITY_DEFAULT_SIZE: (f32, f32) = (120.0, 120.0);
 pub const AMOUNT_OF_ENTITIES: usize = 1;
 
 pub const FRUIT_DEFAULT_SIZE: (f32, f32) = (120.0, 120.0);
-pub const AMOUNT_OF_FRUITS: usize = 1;
+pub const AMOUNT_OF_FRUITS: usize = 0;

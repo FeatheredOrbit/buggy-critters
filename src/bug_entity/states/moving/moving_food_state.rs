@@ -5,7 +5,7 @@ use crate::bug_entity::states::moving::moving_utils::*;
 
 pub fn moving_food_state(
     mut query: Query<(Entity, &mut Transform, &FutureTransform, &mut CurrentlyRotating, &mut CurrentlyMoving, &PhysicalTraits, &MovementPattern),
-        (With<BugEntityRoot>, With<Moving>, With<MovingFood>)>,
+        (With<BugEntityRoot>, With<Moving>, With<MovingFood>, Without<Dead>)>,
     fruit_grid: Res<FruitGrid>,
     largest_entity_sight: Res<LargestEntitySight>,
     mut commands: Commands,
