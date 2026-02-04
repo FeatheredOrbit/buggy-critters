@@ -1,17 +1,13 @@
 use bevy::{camera::visibility::NoFrustumCulling, prelude::*};
-use crate::{bug_entity::components::{attribute_components::*, idle_components::*, moving_components::*, render_components::*, shared_components::*, utils_components::*}, constants::{AMOUNT_OF_ENTITIES, CHUNKY_BODY_ATLAS_INDEX, CHUNKY_HEAD_ATLAS_INDEX, CURVED_LEGS_ATLAS_INDEX, ENTITY_DEFAULT_SIZE}, events::labels::UpdateLargestSightEvent, materials::renderer::resources::RendererHandle};
+use crate::{bug_entity::components::{attribute_components::*, idle_components::*, moving_components::*, render_components::*, shared_components::*, utils_components::*}, constants::{AMOUNT_OF_ENTITIES, CHUNKY_BODY_ATLAS_INDEX, CHUNKY_HEAD_ATLAS_INDEX, CURVED_LEGS_ATLAS_INDEX}, events::labels::UpdateLargestSightEvent, materials::renderer::resources::{RendererHandle, RendererMeshHandle}};
 
 pub fn spawn
 (
     mut commands: Commands, 
-    mut meshes: ResMut<Assets<Mesh>>,
-    renderer_handle: Res<RendererHandle>
+    renderer_handle: Res<RendererHandle>,
+    renderer_mesh_handle: Res<RendererMeshHandle>
 ) 
-{
-    let mesh = Mesh::from(Rectangle::new(ENTITY_DEFAULT_SIZE.0, ENTITY_DEFAULT_SIZE.1));
-
-    let mesh_handle = meshes.add(mesh);
-        
+{       
     for i in 0..AMOUNT_OF_ENTITIES {
         let mut rng = RngComponent::default();
 
@@ -73,7 +69,7 @@ pub fn spawn
 
         // Rendering components
         commands.entity(entity).insert((
-            Mesh2d(mesh_handle.clone()),
+            Mesh2d(renderer_mesh_handle.0.clone()),
             MeshMaterial2d(renderer_handle.0.clone()),
             NoFrustumCulling
         ));

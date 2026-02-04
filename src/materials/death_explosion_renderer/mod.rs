@@ -1,8 +1,14 @@
-use bevy::{asset::RenderAssetUsages, mesh::{MeshVertexAttribute, PrimitiveTopology}, prelude::*, render::{render_resource::AsBindGroup, storage::ShaderStorageBuffer}, sprite_render::{Material2d, Material2dPlugin}};
+use bevy::{asset::RenderAssetUsages, mesh::MeshVertexAttribute, prelude::*, render::{render_resource::AsBindGroup, storage::ShaderStorageBuffer}, sprite_render::{Material2d, Material2dPlugin}};
 
-use crate::materials::death_explosion_renderer::resources::{DeathExplosionMeshHandle, DeathExplosionRendererHandle};
+use crate::{constants::ENTITY_DEFAULT_SIZE, materials::death_explosion_renderer::{render::update_render, resources::{DeathExplosionMeshHandle, DeathExplosionRendererHandle}, shader_data::DeathExplosionShaderData}};
 
 pub mod resources;
+pub mod components;
+mod render;
+mod update;
+mod shader_data;
+
+const FRAGMENT_ID: MeshVertexAttribute = MeshVertexAttribute::new("Fragment_Ids", 3, bevy::mesh::VertexFormat::Float32);
 
 #[derive(Asset, TypePath, AsBindGroup, Debug, Clone, Default)]
 pub struct DeathExplosionRenderer {
@@ -19,6 +25,22 @@ impl Material2d for DeathExplosionRenderer {
     fn alpha_mode(&self) -> bevy::sprite_render::AlphaMode2d {
         return bevy::sprite_render::AlphaMode2d::Blend;
     }
+    fn specialize(
+            descriptor: &mut bevy::render::render_resource::RenderPipelineDescriptor,
+            layout: &bevy::mesh::MeshVertexBufferLayoutRef,
+            _key: bevy::sprite_render::Material2dKey<Self>,
+        ) -> Result<(), bevy::render::render_resource::SpecializedMeshPipelineError> {
+
+        let vertex_layout = layout.0.get_layout(&[
+            Mesh::ATTRIBUTE_POSITION.at_shader_location(0),
+            Mesh::ATTRIBUTE_UV_0.at_shader_location(2),
+            FRAGMENT_ID.at_shader_location(3)
+        ])?;
+
+        descriptor.vertex.buffers = vec![vertex_layout];
+
+        Ok(())
+    }
 }
 
 pub struct DeathExplosionRendererPlugin;
@@ -27,6 +49,7 @@ impl Plugin for DeathExplosionRendererPlugin {
         app.add_plugins(Material2dPlugin::<DeathExplosionRenderer>::default());
 
         app.add_systems(Startup, compile_and_init);
+        app.add_systems(Update, update_render);
     }
 }
 
@@ -38,7 +61,12 @@ fn compile_and_init
     mut storage_buffers: ResMut<Assets<ShaderStorageBuffer>>
 ) 
 {
-    let data: Vec<f32> = vec![];
+    let data= vec![
+        DeathExplosionShaderData {
+            transform: [[0.0; 4]; 4],
+            fragment_amount: [0; 4]
+        }
+    ];
 
     let buffer = storage_buffers.add(ShaderStorageBuffer::from(data));
 
@@ -62,7 +90,7 @@ fn compile_and_init
     commands.entity(materials).despawn();
 }
 
-// Yeah this was generated with AI, I have NO ABSOLUTE IDEA how to properly set up positions, uvs and other stuff, surprised I can even work with shaders in general.
+// Yeah this was generated with AI, I have to be real but I couldn't be bothered aetting them up manually I just want them immediately for the shader.
 pub fn create_split_quad_mesh(splits: usize) -> Mesh {
     let vertex_count = splits + 1;
     let step = 2.0 / splits as f32; // local space step
@@ -115,10 +143,12 @@ pub fn create_split_quad_mesh(splits: usize) -> Mesh {
         }
     }
 
-    let mut mesh = Mesh::new(PrimitiveTopology::TriangleList, RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD);
+    let mut mesh = Mesh::new(bevy::mesh::PrimitiveTopology::TriangleList, RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD);
+    mesh.scale_by(Vec3::new(ENTITY_DEFAULT_SIZE.0, ENTITY_DEFAULT_SIZE.1, 1.0));
     mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, positions);
     mesh.insert_attribute(Mesh::ATTRIBUTE_UV_0, uvs);
-    mesh.insert_attribute(MeshVertexAttribute::new("Fragment IDs", 3, bevy::mesh::VertexFormat::Float32) , fragment_ids);
+
+    mesh.insert_attribute(FRAGMENT_ID, fragment_ids);
 
     mesh.insert_indices(bevy::mesh::Indices::U32(indices));
 

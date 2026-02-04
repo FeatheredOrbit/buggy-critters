@@ -2,7 +2,7 @@ use bevy::{
     asset::uuid_handle, prelude::*, render::{render_resource::AsBindGroup, storage::ShaderStorageBuffer}, shader::ShaderRef, sprite_render::{AlphaMode2d, Material2d, Material2dPlugin}
 };
 
-use crate::materials::renderer::{render::{available_for_rendering, update_renderer}, resources::{EntitiesToRender, RendererHandle}};
+use crate::{constants::ENTITY_DEFAULT_SIZE, materials::renderer::{render::{available_for_rendering, update_renderer}, resources::{EntitiesToRender, RendererHandle, RendererMeshHandle}}};
 
 pub mod shader_data;
 mod render;
@@ -91,6 +91,8 @@ fn compile_and_init
 
     let buffer = storage_buffers.add(ShaderStorageBuffer::from(data));
 
+    let mesh_handle = meshes.add(Mesh::from(Rectangle::new(ENTITY_DEFAULT_SIZE.0, ENTITY_DEFAULT_SIZE.1)));
+
     let renderer_handle = render.add(Renderer {
             entities: buffer.clone(),
             atlas_texture_bugs: atlas_bugs.clone(),
@@ -103,13 +105,14 @@ fn compile_and_init
     );
 
     let materials = commands.spawn((
-        Mesh2d(meshes.add(Rectangle::new(1.0, 1.0))),
+        Mesh2d(mesh_handle.clone()),
 
         MeshMaterial2d(renderer_handle.clone())
 
     )).id();
 
     commands.insert_resource(RendererHandle(renderer_handle));
+    commands.insert_resource(RendererMeshHandle(mesh_handle));
 
     commands.entity(materials).despawn();
 }

@@ -1,6 +1,6 @@
-use bevy::{ecs::relationship::RelationshipSourceCollection, prelude::*};
+use bevy::{camera::visibility::NoFrustumCulling, ecs::relationship::RelationshipSourceCollection, prelude::*};
 
-use crate::{bug_entity::components::{attribute_components::PhysicalTraits, render_components::BugEntityRoot}, events::labels::{HandleEntityDeathEvent, LargestSightUpdateType, UpdateLargestSightEvent}, materials::renderer::resources::EntitiesToRender, resources::LargestEntitySight};
+use crate::{bug_entity::components::{attribute_components::PhysicalTraits, render_components::BugEntityRoot}, events::labels::{HandleEntityDeathEvent, LargestSightUpdateType, UpdateLargestSightEvent}, materials::{death_explosion_renderer::{components::DeathExplosion, resources::{DeathExplosionMeshHandle, DeathExplosionRendererHandle}}, renderer::resources::EntitiesToRender}, resources::{CurrentlySelectedEntity, GlobalRng, LargestEntitySight}};
 
 pub mod labels;
 
@@ -8,6 +8,7 @@ pub struct SetupEventsPlugin;
 impl Plugin for SetupEventsPlugin {
     fn build(&self, app: &mut App) {
         app.add_observer(update_largest_sight_event);
+        app.add_observer(handle_entity_death_event);
     }
 }
 
@@ -62,9 +63,35 @@ pub fn update_largest_sight_event(
 pub fn handle_entity_death_event(
     event: On<HandleEntityDeathEvent>,
     mut entities_to_render: ResMut<EntitiesToRender>,
+    largest_entity_sight: Res<LargestEntitySight>,
+    mut selected_entity: ResMut<CurrentlySelectedEntity>,
+    global_rng: ResMut<GlobalRng>,
+    explosion_renderer: Res<DeathExplosionRendererHandle>,
+    explosion_mesh: Res<DeathExplosionMeshHandle>,
     mut commands: Commands
 ) {
     let (entity, transform) = event.0;
 
     if let Some(_) = entities_to_render.data.remove(&entity) {}
+
+    if selected_entity.0 == Some(entity) {
+        selected_entity.0 = None;
+    }
+
+    if let Some(ent) = largest_entity_sight.entity {
+        if ent == entity {
+            commands.trigger(UpdateLargestSightEvent(LargestSightUpdateType::EntityDied));
+        }
+    }
+
+    commands.spawn((
+        DeathExplosion::new(global_rng),
+        transform,
+        NoFrustumCulling,
+
+        Mesh2d(explosion_mesh.0.clone()),
+        MeshMaterial2d(explosion_renderer.0.clone())
+    ));
+
+    commands.entity(entity).despawn();
 }

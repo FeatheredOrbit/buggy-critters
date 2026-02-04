@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::bug_entity::components::{render_components::BugEntityRoot, shared_components::Dead};
+use crate::{bug_entity::components::{render_components::BugEntityRoot, shared_components::Dead}, events::labels::HandleEntityDeathEvent};
 
 pub fn death_state(
     mut query: Query<(Entity, &mut Transform, &mut Dead), With<BugEntityRoot>>,
@@ -10,8 +10,7 @@ pub fn death_state(
     
     for (entity, mut transform, mut death_handler) in &mut query {
         if handle_death_animation(&mut transform, &mut death_handler, &time) {
-            println!("Animation finished");
-            commands.entity(entity).despawn();
+            commands.trigger(HandleEntityDeathEvent((entity, transform.clone())));
         }
     }
 
@@ -22,8 +21,8 @@ fn handle_death_animation(transform: &mut Transform, death_handler: &mut Dead, t
 
     transform.rotate_z(-(death_handler.time_since_animation.exp() * death_handler.animation_acceleration));
 
-    if death_handler.time_since_animation >= 3.0 {
-        let t = death_handler.time_since_animation - 3.0;
+    if death_handler.time_since_animation >= 2.0 {
+        let t = death_handler.time_since_animation - 2.0;
         let factor = (-t * death_handler.animation_acceleration).exp();
 
         transform.scale.x *= factor;
