@@ -86,6 +86,7 @@ pub fn handle_entity_death_event(
 
     commands.spawn((
         DeathExplosion::new(global_rng),
+        GlobalTransform::default(),
         transform,
         NoFrustumCulling,
 

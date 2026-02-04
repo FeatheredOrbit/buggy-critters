@@ -12,6 +12,7 @@ pub fn update_render(
     let mut data: Vec<DeathExplosionShaderData> = vec![];
 
     for (explosion, transform) in &query {
+        println!("Diddy blud");
         data.push(
             DeathExplosionShaderData {
                 transform: transform.compute_transform().to_matrix().to_cols_array_2d(),

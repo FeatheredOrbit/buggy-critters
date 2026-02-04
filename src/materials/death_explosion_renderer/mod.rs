@@ -93,7 +93,8 @@ fn compile_and_init
 // Yeah this was generated with AI, I have to be real but I couldn't be bothered aetting them up manually I just want them immediately for the shader.
 pub fn create_split_quad_mesh(splits: usize) -> Mesh {
     let vertex_count = splits + 1;
-    let step = 2.0 / splits as f32; // local space step
+    let half = ENTITY_DEFAULT_SIZE.0 / 2.0;
+    let step = ENTITY_DEFAULT_SIZE.0 / splits as f32;
     let uv_step = 1.0 / splits as f32;
 
     let mut positions = Vec::new();
@@ -102,11 +103,11 @@ pub fn create_split_quad_mesh(splits: usize) -> Mesh {
 
     // Generate vertices
     for row in 0..vertex_count {
-        let y = 1.0 - row as f32 * step; // top to bottom
+        let y = half - row as f32 * step; // top to bottom
         let uv_y = row as f32 * uv_step;
 
         for col in 0..vertex_count {
-            let x = -1.0 + col as f32 * step; // left to right
+            let x = -half + col as f32 * step; // left to right
             let uv_x = col as f32 * uv_step;
 
             positions.push([x, y, 0.0]);
@@ -144,7 +145,6 @@ pub fn create_split_quad_mesh(splits: usize) -> Mesh {
     }
 
     let mut mesh = Mesh::new(bevy::mesh::PrimitiveTopology::TriangleList, RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD);
-    mesh.scale_by(Vec3::new(ENTITY_DEFAULT_SIZE.0, ENTITY_DEFAULT_SIZE.1, 1.0));
     mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, positions);
     mesh.insert_attribute(Mesh::ATTRIBUTE_UV_0, uvs);
 
