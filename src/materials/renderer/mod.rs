@@ -8,6 +8,7 @@ pub mod shader_data;
 mod render;
 pub mod resources;
 pub mod components;
+mod testing;
 
 pub const SHADER_HANDLE: Handle<Shader> = uuid_handle!("38c96d71-9b05-467e-b646-3380f0bdf860");
 
@@ -49,6 +50,22 @@ impl Material2d for Renderer {
 
     fn alpha_mode(&self) -> AlphaMode2d {
         return AlphaMode2d::Blend;
+    }
+
+    fn specialize(
+            descriptor: &mut bevy::render::render_resource::RenderPipelineDescriptor,
+            layout: &bevy::mesh::MeshVertexBufferLayoutRef,
+            _key: bevy::sprite_render::Material2dKey<Self>,
+        ) -> Result<(), bevy::render::render_resource::SpecializedMeshPipelineError> {
+        
+        let vertex_layout = layout.0.get_layout(&[
+            Mesh::ATTRIBUTE_POSITION.at_shader_location(0),
+            Mesh::ATTRIBUTE_UV_0.at_shader_location(2)
+        ])?;
+
+        descriptor.vertex.buffers = vec![vertex_layout];
+
+        Ok(())
     }
 }
 

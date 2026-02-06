@@ -12,7 +12,7 @@ const FRAGMENT_ID: MeshVertexAttribute = MeshVertexAttribute::new("Fragment_Ids"
 
 #[derive(Asset, TypePath, AsBindGroup, Debug, Clone, Default)]
 pub struct DeathExplosionRenderer {
-    #[storage(0, read_only)]
+    #[storage(10, read_only)]
     pub dead_entities: Handle<ShaderStorageBuffer>
 }
 impl Material2d for DeathExplosionRenderer {
@@ -84,8 +84,8 @@ fn compile_and_init
 
     )).id();
 
-    commands.insert_resource(DeathExplosionRendererHandle(death_explosion_renderer_handle));
-    commands.insert_resource(DeathExplosionMeshHandle(mesh_handle));
+    commands.insert_resource(DeathExplosionRendererHandle(death_explosion_renderer_handle.clone()));
+    commands.insert_resource(DeathExplosionMeshHandle(mesh_handle.clone()));
 
     commands.entity(materials).despawn();
 }

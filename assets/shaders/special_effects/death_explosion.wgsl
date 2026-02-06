@@ -9,7 +9,6 @@ struct VertexInput {
     @builtin(instance_index) instance_index: u32,
     @location(0) position: vec3<f32>,
     @location(2) uv: vec2<f32>,
-    @location(3) fragment_id: f32
 }
 
 struct VertexOutput {
@@ -17,7 +16,7 @@ struct VertexOutput {
     @location(0) uv: vec2<f32>
 }
 
-@group(#{MATERIAL_BIND_GROUP}) @binding(0)
+@group(#{MATERIAL_BIND_GROUP}) @binding(10)
 var<storage, read> explosions: array<DeathExplosionShaderData>;
 
 @vertex

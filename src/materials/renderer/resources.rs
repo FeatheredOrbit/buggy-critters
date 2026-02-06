@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use bevy::prelude::*;
+use bevy::{prelude::*, render::{extract_resource::ExtractResource, render_resource::Buffer}};
 
 use crate::materials::renderer::{Renderer, shader_data::ShaderData};
 
@@ -10,8 +10,11 @@ pub struct RendererHandle(pub Handle<Renderer>);
 #[derive(Resource)]
 pub struct RendererMeshHandle(pub Handle<Mesh>);
 
-#[derive(Resource, Default)]
+#[derive(Resource, Default, ExtractResource, Clone)]
 pub struct EntitiesToRender {
     pub data: HashMap<Entity, ShaderData>,
     pub dirty: bool
 }
+
+#[derive(Resource)]
+pub struct InstanceBuffer(pub Buffer);
