@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use bevy::{prelude::*, render::{extract_resource::ExtractResource, render_resource::Buffer}};
+use bevy::{prelude::*, render::{extract_resource::ExtractResource, render_resource::{BindGroup, Buffer}}};
 
 use crate::materials::renderer::{Renderer, shader_data::ShaderData};
 
@@ -17,4 +17,7 @@ pub struct EntitiesToRender {
 }
 
 #[derive(Resource)]
-pub struct InstanceBuffer(pub Buffer);
+pub struct InstanceBuffer {
+    pub buffer: Buffer,
+    pub instance_count: usize
+}

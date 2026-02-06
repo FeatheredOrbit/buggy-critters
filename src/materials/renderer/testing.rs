@@ -1,24 +1,17 @@
 use bevy::{
-    asset::{RenderAssetUsages, uuid_handle},
-    color::palettes::basic::YELLOW,
-    core_pipeline::core_2d::{CORE_2D_DEPTH_FORMAT, Transparent2d},
-    math::{FloatOrd, ops},
-    mesh::{Indices, MeshVertexAttribute, VertexBufferLayout},
-    prelude::*,
-    render::{
+    asset::{RenderAssetUsages, uuid_handle}, color::palettes::basic::YELLOW, core_pipeline::core_2d::{CORE_2D_DEPTH_FORMAT, Transparent2d}, ecs::system::lifetimeless::SRes, math::{FloatOrd, ops}, mesh::{Indices, MeshVertexAttribute, VertexBufferLayout}, prelude::*, render::{
         Extract, Render, RenderApp, RenderStartup, RenderSystems, extract_resource::ExtractResourcePlugin, mesh::RenderMesh, render_asset::RenderAssets, render_phase::{
-            AddRenderCommand, DrawFunctions, PhaseItem, PhaseItemExtraIndex, RenderCommand, SetItemPipeline, ViewSortedRenderPhases
+            AddRenderCommand, DrawFunctions, PhaseItem, PhaseItemExtraIndex, RenderCommand, RenderCommandResult, SetItemPipeline, ViewSortedRenderPhases
         }, render_resource::{
-            BlendState, BufferAddress, BufferDescriptor, BufferUsages, ColorTargetState, ColorWrites, CompareFunction, DepthBiasState, DepthStencilState, Face, FragmentState, MultisampleState, PipelineCache, PrimitiveState, PrimitiveTopology, RenderPipelineDescriptor, SpecializedRenderPipeline, SpecializedRenderPipelines, StencilFaceState, StencilState, TextureFormat, VertexFormat, VertexState, VertexStepMode
+            BindGroupEntry, BindGroupLayoutEntry, BindingType, BlendState, BufferAddress, BufferBindingType, BufferDescriptor, BufferInitDescriptor, BufferUsages, ColorTargetState, ColorWrites, CompareFunction, DepthBiasState, DepthStencilState, Face, FragmentState, IntoBinding, MultisampleState, PipelineCache, PrimitiveState, PrimitiveTopology, RenderPipelineDescriptor, ShaderStages, SpecializedRenderPipeline, SpecializedRenderPipelines, StencilFaceState, StencilState, TextureFormat, VertexFormat, VertexState, VertexStepMode
         }, renderer::RenderDevice, sync_component::SyncComponentPlugin, sync_world::{MainEntity, MainEntityHashMap, RenderEntity}, view::{ExtractedView, RenderVisibleEntities, ViewTarget}
-    },
-    sprite_render::{
-        DrawMesh2d, Material2dBindGroupId, Mesh2dPipeline, Mesh2dPipelineKey, Mesh2dTransforms, MeshFlags, RenderMesh2dInstance, SetMesh2dBindGroup, SetMesh2dViewBindGroup, extract_mesh2d, init_mesh_2d_pipeline
-    },
+    }, sprite_render::{
+        DrawMesh2d, Material2dBindGroupId, Mesh2dBindGroup, Mesh2dPipeline, Mesh2dPipelineKey, Mesh2dTransforms, MeshFlags, RenderMesh2dInstance, SetMesh2dBindGroup, SetMesh2dViewBindGroup, extract_mesh2d, init_mesh_2d_pipeline
+    }
 };
 use std::f32::consts::PI;
 
-use crate::materials::renderer::{resources::EntitiesToRender, shader_data::ShaderData};
+use crate::materials::renderer::{resources::{EntitiesToRender, InstanceBuffer}, shader_data::ShaderData};
 
 const SHADER_HANDLE: Handle<Shader> = uuid_handle!("697663f3-d6b1-4852-8156-cc2c87b0d614");
 
@@ -37,18 +30,29 @@ struct RendererDrawCommand;
 impl<P: PhaseItem> RenderCommand<P> for RendererDrawCommand {
     type ItemQuery = ();
     type ViewQuery = ();
-    type Param = ();
+    type Param = (
+        SRes<InstanceBuffer>,
+        SRes<Mesh2dBindGroup>
+    );
 
     fn render<'w>
     (
         item: &P,
         view: bevy::ecs::query::ROQueryItem<'w, '_, Self::ViewQuery>,
         entity: Option<bevy::ecs::query::ROQueryItem<'w, '_, Self::ItemQuery>>,
-        param: bevy::ecs::system::SystemParamItem<'w, '_, Self::Param>,
+        (instance_buffer, bind_group): bevy::ecs::system::SystemParamItem<'w, '_, Self::Param>,
         pass: &mut bevy::render::render_phase::TrackedRenderPass<'w>,
     ) -> bevy::render::render_phase::RenderCommandResult {
         
-        bevy::render::render_phase::RenderCommandResult::Success
+        pass.set_bind_group(2, &bind_group.into_inner().value, &[]);
+
+        if instance_buffer.instance_count > 0 {
+
+            return RenderCommandResult::Success;
+        }
+        else {
+            return RenderCommandResult::Skip;
+        }
     }
 }
 
@@ -168,17 +172,42 @@ fn init(
     mesh2d_pipeline: Res<Mesh2dPipeline>,
     device: Res<RenderDevice>
 ) {
-
-    let instance_buffer = device.create_buffer(&BufferDescriptor {
+    let instance_buffer = device.create_buffer_with_data(&BufferInitDescriptor {
         label: Some("Instance Buffer"),
-        size: (size_of::<ShaderData>() * 15000) as BufferAddress,
-        usage: BufferUsages::STORAGE | BufferUsages::COPY_DST,
-        mapped_at_creation: false
+        contents: &[],
+        usage: BufferUsages::STORAGE | BufferUsages::COPY_DST
     });
+
+    let bind_group_layout = device.create_bind_group_layout("Renderer Bind Group Layout", &[
+        BindGroupLayoutEntry {
+            binding: 0,
+            visibility: ShaderStages::VERTEX,
+            ty: BindingType::Buffer { ty: BufferBindingType::Storage { read_only: true }, 
+                has_dynamic_offset: false, 
+                min_binding_size: None
+            },
+            count: None
+        }
+    ]);
+
+    let bind_group = device.create_bind_group("Renderer Bind Group Layout", &bind_group_layout, &[
+        BindGroupEntry {
+            binding: 0,
+            resource: instance_buffer.as_entire_binding()
+        }
+    ]);
 
     commands.insert_resource(CustomRendererPipeline {
         mesh2d_pipeline: mesh2d_pipeline.clone(),
         shader: SHADER_HANDLE
+    });
+
+    commands.insert_resource(InstanceBuffer {
+        buffer: instance_buffer,
+        instance_count: 0
+    });
+    commands.insert_resource(Mesh2dBindGroup {
+        value: bind_group
     });
 }
 
