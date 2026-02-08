@@ -9,3 +9,6 @@ Barely started, you could blow my right hand off and chop a few fingers and I co
 ## Inspirations?
 Heavily inspired by THE BIBITES, made by Léo Caussan. Hopefully it's not plagiarism. Please check out his website:
 [THE BIBITES - Digital Life](https://www.thebibites.com/?v=7885444af42e)
+
+## How do I build the project?
+I don't see why you would want to build the project, but it should be as simple as cloning the repo and running `cargo build`.
