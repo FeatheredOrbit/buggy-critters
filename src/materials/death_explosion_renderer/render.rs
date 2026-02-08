@@ -26,7 +26,6 @@ pub fn update_render(
         if let Some(material) = materials.get(mat_handle) {
 
             if let Some(storage_buffer) = storage_buffers.get_mut(&material.dead_entities) {
-                println!("Diddy blud");
                 storage_buffer.set_data(data);
             }
         }

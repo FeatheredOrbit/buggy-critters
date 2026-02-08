@@ -225,8 +225,7 @@ fn queue(
         let Some(phase) = phases.get_mut(&view.retained_view_entity) else {
             continue;
         };
-
-        // Obligatory pipeline key junk (this is wgpu reality, not Bevy fluff)
+        
         let key =
             Mesh2dPipelineKey::from_msaa_samples(msaa.samples()) |
             Mesh2dPipelineKey::from_hdr(view.hdr);
