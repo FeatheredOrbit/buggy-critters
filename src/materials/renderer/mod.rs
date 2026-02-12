@@ -8,7 +8,6 @@ pub mod shader_data;
 mod render;
 pub mod resources;
 pub mod components;
-mod testing;
 
 pub const SHADER_HANDLE: Handle<Shader> = uuid_handle!("38c96d71-9b05-467e-b646-3380f0bdf860");
 
